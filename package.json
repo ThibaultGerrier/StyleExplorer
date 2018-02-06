@@ -44,19 +44,10 @@
       "import/no-unresolved": 0,
       "import/no-extraneous-dependencies": 0,
       "import/extensions": 0,
-      "no-underscore-dangle": [
-        "error",
-        {
-          "allow": [
-            "_id",
-            "_ensureIndex",
-            "_verifyEmailToken",
-            "_resetPasswordToken",
-            "_name"
-          ]
-        }
-      ],
-      "class-methods-use-this": 0
+      "class-methods-use-this": 0,
+      "no-console": 0,
+      "no-underscore-dangle": 0,
+      "linebreak-style": "off"
     }
   },
   "dependencies": {
@@ -64,6 +55,7 @@
     "bcrypt": "^1.0.3",
     "bootstrap": "^3.3.7",
     "child-process": "^1.0.2",
+    "config": "^1.29.4",
     "jquery": "^2.2.4",
     "jquery-validation": "^1.15.1",
     "meteor-node-stubs": "^0.3.2",

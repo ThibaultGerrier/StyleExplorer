@@ -1,9 +1,11 @@
 import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import Documents from './documents';
 import rateLimit from '../../modules/rate-limit.js';
 
+const config = require('../../../config/default');
 const spawn = require('child_process').spawn;
 const fs = require('fs');
 
@@ -50,35 +52,33 @@ export const changePublicity = new ValidatedMethod({
 
 function isNumber(n) { return !isNaN(parseFloat(n)); }
 
+
 function extend(a, b) {
-  for (const key in b) {
-    if (b.hasOwnProperty(key)) { a[key] = b[key]; }
-  }
-  return a;
+  return Object.assign(a, b);
 }
 
 function hashCode(str) {
   let hash = 0;
   if (str.length === 0) return hash;
-  for (let i = 0; i < str.length; i++) {
+  for (let i = 0; i < str.length; i += 1) {
     const char = str.charCodeAt(i);
+    /* eslint-disable no-bitwise */
     hash = ((hash << 5) - hash) + char;
     hash &= hash; // Convert to 32bit integer
+    /* eslint-enable no-bitwise */
   }
   return hash;
 }
 
 function javaDone(_id, hash) {
-  // future.wait();
-
   // console.log('java is done');
   Meteor.bindEnvironment(Meteor._sleepForMs(1000));
 
-  const result = fs.readFileSync(`C:\\Users\\thibault\\WebstormProjects\\MyProject\\texts\\textresult_${_id}${hash}.json`, 'utf8');
+  const result = fs.readFileSync(`${Meteor.absolutePath}/texts/textresult_${_id}${hash}.json`, 'utf8');
   // console.log(result);
   // console.log('result is here');
 
-  fs.unlinkSync(`C:\\Users\\thibault\\WebstormProjects\\MyProject\\texts\\textresult_${_id}${hash}.json`);
+  fs.unlinkSync(`${Meteor.absolutePath}/texts/textresult_${_id}${hash}.json`);
   // console.log('json file deleted');
 
   const doc = Documents.findOne(_id);
@@ -96,19 +96,13 @@ if (Meteor.isServer) {
       check(features, String);
       check(thirdArg, String);
 
-      // text = text.replace(/(?:\r\n|\r|\n)/g, '');
-
-      const Future = Npm.require('fibers/future');
-      const future = new Future();
-
       const hash = Math.abs(hashCode(features));
 
-      fs.writeFile(`C:\\Users\\thibault\\WebstormProjects\\MyProject\\texts\\text_${_id}${hash}.txt`, text, (err) => {
-        if (err) throw err;
-        // console.log('The file has been saved!');
-      });
+      fs.writeFileSync(`${Meteor.absolutePath}/texts/text_${_id}${hash}.txt`, text);
 
-      const cmd = spawn('cmd', ['/c', `java -jar C:\\Users\\thibault\\eclipse_workspace\\misc\\TextFeatures-master\\out\\artifacts\\TextFeaturesMaven_jar\\TextFeaturesMaven.jar ${_id}${hash} ${thirdArg} ${features}`]);
+      console.log(config.jarLocation);
+
+      const cmd = spawn('cmd', ['/c', `java -jar ${config.jarLocation} ${_id}${hash} ${thirdArg} ${features}`]);
       cmd.stdout.on('data',
         Meteor.bindEnvironment((data) => {
           if (isNumber(data)) {

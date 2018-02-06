@@ -52,9 +52,9 @@ const errorFeatures = [
 ];
 
 export default {
-  features : [
+  features: [
     lexicalFeatures,
     syntacticalFeatures,
     errorFeatures,
-  ]
+  ],
 };
