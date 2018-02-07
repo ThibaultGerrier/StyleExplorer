@@ -1,8 +1,21 @@
 const Highcharts = require('highcharts');
 require('highcharts/modules/exporting')(Highcharts);
+require('highcharts/modules/series-label')(Highcharts);
 
 const createChart = (id, title, data, zoom) => {
-  const series = Object.values(data);
+  const series = [];
+
+  Object.values(data).forEach((d) => {
+    const values = d.data;
+    const mappedData = [];
+    values.forEach((p, i) => {
+      mappedData.push([(i / (values.length - 1)) * 100, p]);
+    });
+    series.push({
+      name: d.name,
+      data: mappedData,
+    });
+  });
 
   const chart = Highcharts.chart(id, {
     title: {

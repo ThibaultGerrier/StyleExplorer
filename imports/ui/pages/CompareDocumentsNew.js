@@ -14,10 +14,10 @@ const removeNonAlphabetic = str => str.replace(/[^A-Za-z]/g, '');
 
 const updateToFirstPlace = (arr, e) => {
   if (e.length === 0) {
-    return arr;
+    return arr.sort();
   }
   const r = e.slice();
-  for (const j of arr) {
+  for (const j of arr.sort()) {
     if (!e.includes(j)) {
       r.push(j);
     }
