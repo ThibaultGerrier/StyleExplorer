@@ -6,7 +6,7 @@ import AppNavigation from '../containers/AppNavigation.js';
 const App = ({ children }) => (
   <div>
     <AppNavigation/>
-    <Grid fluid style={{width: '80%'}}>
+    <Grid fluid style={{ width: '80%' }}>
       { children }
     </Grid>
   </div>

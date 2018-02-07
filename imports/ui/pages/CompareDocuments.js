@@ -55,17 +55,15 @@ const SortableList = SortableContainer((props) => {
 export default class CompareDocuments extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      whichFeaturesList: [],
+      computeFeatureList: [],
+      docs: [],
+      deletedAll: false,
+      computedAll:false,
+    };
+    this.allFeatures = [];
   }
-
-  state = {
-    whichFeaturesList: [],
-    computeFeatureList: [],
-    docs: [],
-    deletedAll: false,
-    computedAll:false,
-  };
-
-  allFeatures = [];
 
   componentDidMount() {
     let documents = this.props.documents;
@@ -103,7 +101,7 @@ export default class CompareDocuments extends React.Component {
     ));
   }
 
-  getKey = (id, tag) => {
+  static getKey(id, tag){
     return tag + id;
   };
 
