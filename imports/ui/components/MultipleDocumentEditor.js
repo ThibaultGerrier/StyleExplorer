@@ -31,7 +31,8 @@ export default class DocumentEditor extends React.Component {
     _.each(acceptedFiles,(file) => {
       fileTitleArr.push(file.name);
       let read = new FileReader();
-      read.readAsBinaryString(file);
+      //read.readAsBinaryString(file);
+      read.readAsText(file);
       read.onloadend = () => {
         //let to = read.result.length< 300 ? read.result.length : 300;
         this.setState(({list}) => ({ list: list.concat([[file.name, read.result]])}));

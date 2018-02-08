@@ -96,15 +96,21 @@ if (Meteor.isServer) {
       check(features, String);
       check(thirdArg, String);
 
+      let cleanText = text.replace(/[\n]{3}/g, '$par$').replace(/\s+/g, ' ').trim(); // 3 should probably be a parameter
+      // eslint-disable-next-line no-control-regex
+      cleanText = cleanText.replace(/[^\x00-\x7F]/g, '');
+
       const hash = Math.abs(hashCode(features));
 
-      fs.writeFileSync(`${Meteor.absolutePath}/texts/text_${_id}${hash}.txt`, text);
+      fs.writeFileSync(`${Meteor.absolutePath}/texts/text_${_id}${hash}.txt`, cleanText);
 
-      console.log(config.jarLocation);
-
-      const cmd = spawn('cmd', ['/c', `java -jar ${config.jarLocation} ${_id}${hash} ${thirdArg} ${features}`]);
+      const runArgs = `java -jar ${config.jarLocation} ${_id}${hash} ${thirdArg} ${features}`;
+      console.log(runArgs);
+      const cmd = spawn('cmd', ['/c', runArgs]);
+      console.log('started with ', _id);
       cmd.stdout.on('data',
         Meteor.bindEnvironment((data) => {
+          // console.log(data.toString('utf8'));
           if (isNumber(data)) {
             Documents.update({ _id }, { $set: { featureCompletion: parseFloat(data) } });
           }
@@ -115,10 +121,12 @@ if (Meteor.isServer) {
 
       const onClose = Meteor.bindEnvironment(
         () => {
+          console.log('done with ', _id);
           // console.log(`child process exited with code`);
           javaDone(_id, hash);
         },
         (e) => {
+          console.log(e);
           throw e;
         }
       );

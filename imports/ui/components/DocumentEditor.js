@@ -4,9 +4,9 @@ import React from 'react';
 import { FormGroup, ControlLabel, FormControl, Button, Row, Col, Glyphicon } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
-import {_} from 'meteor/underscore';
+import { _ } from 'meteor/underscore';
 import documentEditor from '../../modules/document-editor.js';
-import Features from "./Features";
+import Features from './Features';
 
 export default class DocumentEditor extends React.Component {
   constructor(props) {
@@ -21,18 +21,19 @@ export default class DocumentEditor extends React.Component {
     }, 0);
   }
 
-  onDrop(acceptedFiles, rejectedFiles){
-    if(rejectedFiles.length != 0) {
-      alert('Rejected files: ' + rejectedFiles.map(ele=>(ele.name)));
+  onDrop(acceptedFiles, rejectedFiles) {
+    if (rejectedFiles.length !== 0) {
+      alert(`Rejected files: ${rejectedFiles.map(ele => (ele.name))}`);
     }
 
-    _.each(acceptedFiles, function(file){
+    _.each(acceptedFiles, (file) => {
       document.querySelector('[name="title"]').value = file.name;
-      let read = new FileReader();
-      read.readAsBinaryString(file);
-      read.onloadend = function(){
+      const read = new FileReader();
+      // read.readAsBinaryString(file);
+      read.readAsText(file);
+      read.onloadend = function () {
         document.querySelector('[name="body"]').value = read.result;
-      }
+      };
     });
   }
 
@@ -66,8 +67,8 @@ export default class DocumentEditor extends React.Component {
             </FormGroup>
           </Col>
           <Col xs={ 3 } sm={ 3 } md={ 3 } >
-            <Dropzone onDrop={this.onDrop} multiple={false} accept={'text/plain'} style={{borderWidth: "2px", borderColor: "black", borderStyle: "dashed", borderRadius: "4px", margin: "20px", padding: "20px", width: "200px", transition: "all 0.5s"}}>
-              <h4 style={{ textAlign: "center"}}>Try dropping a text files here, or click to select file to upload.<br/><Glyphicon glyph="upload" style={{fontSize: "1.5em"}}/></h4>
+            <Dropzone onDrop={this.onDrop} multiple={false} accept={'text/plain'} style={{ borderWidth: '2px', borderColor: 'black', borderStyle: 'dashed', borderRadius: '4px', margin: '20px', padding: '20px', width: '200px', transition: 'all 0.5s' }}>
+              <h4 style={{ textAlign: 'center' }}>Try dropping a text files here, or click to select file to upload.<br/><Glyphicon glyph="upload" style={{ fontSize: '1.5em' }}/></h4>
             </Dropzone>
           </Col>
         </Row>

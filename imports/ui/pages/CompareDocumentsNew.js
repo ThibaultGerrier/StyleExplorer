@@ -58,6 +58,7 @@ export default class CompareDocumentsNew extends React.Component {
 
   setCharts() {
     const charts = [];
+    console.log(this.state.featuresList);
     this.state.featuresList.forEach((f) => {
       let id = f;
       let num;
@@ -73,7 +74,7 @@ export default class CompareDocumentsNew extends React.Component {
           const featureData = JSON.parse(doc.featureData)[f];
           data[doc._id] = {
             name: doc.title,
-            data: featureData,
+            data: featureData || [],
           };
         });
       }
