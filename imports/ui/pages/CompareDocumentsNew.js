@@ -4,7 +4,7 @@ import { Col, Row } from 'react-bootstrap';
 import { Bert } from 'meteor/themeteorchef:bert';
 
 import { features } from '../../modules/featuresClean';
-import { createChart } from '../../modules/charts';
+import Chart from '../../modules/chartsObj';
 
 const getFeatureName = id => features[id].nameEn;
 const getFeatureDimension = id => features[id].dimensions;
@@ -58,7 +58,6 @@ export default class CompareDocumentsNew extends React.Component {
 
   setCharts() {
     const charts = [];
-    console.log(this.state.featuresList);
     this.state.featuresList.forEach((f) => {
       let id = f;
       let num;
@@ -67,27 +66,30 @@ export default class CompareDocumentsNew extends React.Component {
         id = removeNonAlphabetic(id);
       }
       const data = {};
-      if (getFeatureDimension(id) !== '1') {
-        console.log('not 1');
-      } else {
-        this.state.documents.forEach((doc) => {
-          const featureData = JSON.parse(doc.featureData)[f];
-          data[doc._id] = {
-            name: doc.title,
-            data: featureData || [],
-          };
-        });
-      }
+      // if (getFeatureDimension(id) !== '1') {
+      //   console.log('not 1');
+      // } else {
+      this.state.documents.forEach((doc) => {
+        const featureData = JSON.parse(doc.featureData)[f];
+        data[doc._id] = {
+          id: doc._id,
+          name: doc.title,
+          data: featureData || [],
+        };
+      });
+      // }
 
-      const onZoomClick = (identifier) => {
+      const onZoomClick = (identifier, chart) => {
         let bigIds = this.state.bigIds;
         if (bigIds.includes(identifier)) {
           bigIds = bigIds.filter(item => item !== identifier);
+          chart.switchSize();
         } else if (bigIds.length >= 2) {
           Bert.alert('Cannot magnify more than 2 charts', 'danger');
           return;
         } else {
           bigIds.push(identifier);
+          chart.switchSize();
         }
         this.setState({ bigIds });
         let featuresList = this.state.featuresList;
@@ -95,28 +97,36 @@ export default class CompareDocumentsNew extends React.Component {
         this.setState({ featuresList });
       };
 
-      charts.push(
-        createChart(
-          `chart_${f}`, // html id
-          (num ? `${getFeatureName(id)} with n = ${num}` : getFeatureName(id)), // title
-          data, // data
-          onZoomClick
-        )
-      );
+      const config = {
+        htmlId: `chart_${f}`,
+        title: (num ? `${getFeatureName(id)} with n = ${num}` : getFeatureName(id)),
+        dimension: getFeatureDimension(id),
+        onZoomClick,
+        data,
+      };
+
+      const chart = new Chart(config);
+      if (getFeatureDimension(id) === '1') {
+        chart.lineChart();
+      } else {
+        chart.columnChart();
+      }
+      chart.create();
+      charts.push(chart);
     });
     this.setState({ charts });
   }
 
   componentDidUpdate() {
-    console.log('update');
+    // console.log('update');
     this.state.charts.forEach((chart) => {
-      chart.reflow();
-      chart.redraw();
+      chart.chart.reflow();
+      chart.chart.redraw();
     });
   }
 
   render() {
-    console.log('render');
+    // console.log('render');
     const bigColSize = this.state.bigIds.length === 1 ? 12 : 6;
     return (
       <div>

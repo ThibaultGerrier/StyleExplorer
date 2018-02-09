@@ -7,7 +7,7 @@ import Loading from '../components/Loading.js';
 
 const composer = ({ params }, onData) => {
   const docList = params._ids.split('.');
-  const subscription = Meteor.subscribe('documents.list');
+  const subscription = Meteor.subscribe('documents.list.short');
   if (subscription.ready()) {
     const documents = Documents.find({ _id: { $in: docList,
     } }).fetch();
