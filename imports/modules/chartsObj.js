@@ -13,6 +13,8 @@ export default class Chart {
     this.isBig = false;
     this.chart = {};
     this.wordCount = 7;
+    this.colors = config.colors;
+    //console.log(config.colors);
   }
 
   columnChart() {
@@ -66,8 +68,10 @@ export default class Chart {
         }
       });
       series.push({
+        id: doc.id,
         name: doc.name,
         data,
+        color: this.colors[doc.id],
       });
     });
 
@@ -138,8 +142,10 @@ export default class Chart {
         mappedData.push([(i / (values.length - 1)) * 100, p]);
       });
       series.push({
+        id: doc.id,
         name: doc.name,
         data: mappedData,
+        color: this.colors[doc.id],
         label: {
           enabled: false,
         },

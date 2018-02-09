@@ -101,7 +101,7 @@ export default class CompareDocuments extends React.Component {
     ));
   }
 
-  static getKey(id, tag){
+  getKey(id, tag){
     return tag + id;
   };
 

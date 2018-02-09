@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Glyphicon, Popover, OverlayTrigger, Button } from 'react-bootstrap';
 import { Bert } from 'meteor/themeteorchef:bert';
+import { SliderPicker } from 'react-color';
 
 import { features } from '../../modules/featuresClean';
 import Chart from '../../modules/chartsObj';
@@ -32,13 +33,18 @@ export default class CompareDocumentsNew extends React.Component {
       featuresList: [],
       documents: [],
       bigIds: [],
+      colors: {},
     };
+    this.defaultColors = ['#40bf45', '#4069bf', '#bf4042', '#b840bf', '#24194d', '#bf8d40', '#d279bc'];
+    this.curColor = -1; // first call make +=1 before getting index
   }
 
   componentWillMount() {
     const documents = this.props.documents;
     const featureList = [];
+    const colors = {};
     documents.forEach((doc) => {
+      colors[doc._id] = this.nextColor();
       const jsonObj = JSON.parse(doc.featureData);
       Object.keys(jsonObj).forEach((ele) => {
         const feature = ele.toString();
@@ -47,6 +53,7 @@ export default class CompareDocumentsNew extends React.Component {
         }
       });
     });
+    this.setState({ colors });
     this.setState({ featuresList: featureList.sort() });
     this.setState({ documents });
   }
@@ -103,6 +110,7 @@ export default class CompareDocumentsNew extends React.Component {
         dimension: getFeatureDimension(id),
         onZoomClick,
         data,
+        colors: this.state.colors,
       };
 
       const chart = new Chart(config);
@@ -125,12 +133,62 @@ export default class CompareDocumentsNew extends React.Component {
     });
   }
 
+  changeColor(docId, color) {
+    const colorState = this.state.colors;
+    colorState[docId] = color.hex;
+    this.setState({ colors: colorState });
+    this.state.charts.forEach((chart) => {
+      const series = chart.chart.get(docId);
+      series.update(({ color: color.hex }));
+    });
+  }
+
+  nextColor() {
+    this.curColor += 1;
+    return this.defaultColors[this.curColor];
+  }
+
   render() {
     // console.log('render');
     const bigColSize = this.state.bigIds.length === 1 ? 12 : 6;
+    const titleColSize = this.state.documents.length >= 4 ? 2 : 3;
+    // const popoverBottom = (
+    // <Popover id="popover-positioned-bottom" title="Popover bottom">
+    //   <SliderPicker
+    //     color={this.state.colors[doc._id]}
+    //     onChangeComplete={ (col) => { this.changeColor(doc._id, col); }}
+    //   />
+    // </Popover>);
+
+    const popOver = id => (
+        <Popover id="popover-positioned-bottom" title="Choose a color for this document">
+          <SliderPicker
+            color={this.state.colors[id]}
+            onChangeComplete={ (col) => { this.changeColor(id, col); }}
+          />
+        </Popover>);
+
+
     return (
       <div>
         <h1>Comparison of Documents</h1>
+        <Row>
+          {this.state.documents.map(doc => (
+            <Col xs={6} sm={4} md={titleColSize} lg={titleColSize} key={`docTitle_${doc._id}`}>
+              <Row>
+                <Col xs={11} sm={11} md={11} lg={11}>
+                  <h3 style={{ display: 'inline-block' }}>{doc.title}</h3>
+                </Col>
+
+                <OverlayTrigger trigger="click" placement="bottom" overlay={popOver(doc._id)}>
+                  <Glyphicon glyph='chevron-down' style={{ fontSize: '1.2em', color: this.state.colors[doc._id], marginTop: '25px', cursor: 'pointer' }}/>
+                </OverlayTrigger>
+              </Row>
+
+            </Col>
+           ))}
+        </Row>
+        <br/>
         <Row>
           {this.state.featuresList.map((f, id) => (
             this.state.bigIds.includes(f) ?
