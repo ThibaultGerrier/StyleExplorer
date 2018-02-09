@@ -7,15 +7,15 @@
     "start": "meteor run"
   },
   "devDependencies": {
-    "babel-eslint": "^6.1.2",
+    "babel-eslint": "^8.2.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "chimp": "^0.41.2",
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^12.0.0",
-    "eslint-plugin-import": "^1.16.0",
-    "eslint-plugin-jsx-a11y": "^2.2.3",
-    "eslint-plugin-meteor": "^4.0.1",
-    "eslint-plugin-react": "^6.4.1"
+    "chimp": "^0.51.0",
+    "eslint": "^4.17.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-meteor": "^4.1.6",
+    "eslint-plugin-react": "^7.6.1"
   },
   "eslintConfig": {
     "parserOptions": {
@@ -51,28 +51,30 @@
     }
   },
   "dependencies": {
+    "@babel/runtime": "^7.0.0-beta.39",
     "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",
     "bootstrap": "^3.3.7",
     "child-process": "^1.0.2",
     "config": "^1.29.4",
     "highcharts": "^6.0.6",
-    "jquery": "^2.2.4",
+    "jquery": "^3.3.1",
     "jquery-validation": "^1.15.1",
     "meteor-node-stubs": "^0.3.2",
     "prop-types": "latest",
-    "react": "^15.6.2",
+    "react": "^16.2.0",
     "react-addons-pure-render-mixin": "^15.3.2",
     "react-addons-update": "^15.5.2",
-    "react-bootstrap": "^0.30.5",
+    "react-bootstrap": "^0.32.1",
     "react-color": "^2.13.8",
-    "react-dom": "^15.6.2",
-    "react-dropzone": "^3.12.4",
+    "react-dom": "^16.2.0",
+    "react-dropzone": "^4.2.7",
     "react-file-download": "^0.3.3",
     "react-highcharts": "^16.0.2",
-    "react-komposer": "^1.13.1",
-    "react-router": "^3.0.0",
-    "react-router-bootstrap": "^0.23.1",
+    "react-komposer": "^2.0.0",
+    "react-router": "^4.2.0",
+    "react-router-bootstrap": "^0.24.4",
+    "react-router-dom": "^4.2.2",
     "react-sortable-hoc": "^0.6.2"
   },
   "babel": {

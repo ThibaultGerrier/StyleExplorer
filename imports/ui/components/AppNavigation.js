@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Navbar } from 'react-bootstrap';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import PublicNavigation from './PublicNavigation.js';
 import AuthenticatedNavigation from './AuthenticatedNavigation.js';
 
-const renderNavigation = hasUser => (hasUser ? <AuthenticatedNavigation /> : <PublicNavigation />);
 
-const AppNavigation = ({ hasUser }) => (
+const AppNavigation = props => (
   <Navbar>
     <Navbar.Header>
       <Navbar.Brand>
@@ -16,13 +15,14 @@ const AppNavigation = ({ hasUser }) => (
       <Navbar.Toggle />
     </Navbar.Header>
     <Navbar.Collapse>
-      { renderNavigation(hasUser) }
+      { props.authenticated ? <AuthenticatedNavigation {...props} /> : <PublicNavigation /> }
     </Navbar.Collapse>
   </Navbar>
 );
 
+
 AppNavigation.propTypes = {
-  hasUser: PropTypes.object,
+  authenticated: PropTypes.bool,
 };
 
 export default AppNavigation;

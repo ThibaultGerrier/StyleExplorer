@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 import { Meteor } from 'meteor/meteor';
-import { browserHistory } from 'react-router';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { upsertDocument } from '../api/documents/methods.js';
 import './validation.js';
@@ -36,18 +35,17 @@ const handleUpsert = () => {
     selectedCheckboxes.add('all');
   }
 
-
   let featureStr = '';
-  for (const item of selectedCheckboxes) {
+  selectedCheckboxes.forEach((item) => {
     featureStr += `${item} `;
-  }
+  });
   featureStr = featureStr.substring(0, featureStr.length - 1);
 
   let thirdArg;
   if (document.querySelector('[value=maxRadio]').checked === true) {
     thirdArg = `n_max=${document.querySelector('[name=maxInput]').value}`;
   } else {
-    thirdArg = `n_exact=${document.querySelector('[name=exactInput]').value.split(' ').join('.')}`;   // '2 5 3' -> 2.5.3
+    thirdArg = `n_exact=${document.querySelector('[name=exactInput]').value.split(' ').join('.')}`; // '2 5 3' -> 2.5.3
   }
 
   if (doc && doc._id) upsert._id = doc._id;
@@ -57,7 +55,7 @@ const handleUpsert = () => {
     } else {
       component.documentEditorForm.reset();
       Bert.alert(confirmation, 'success');
-      browserHistory.push(`/documents/${response.insertedId || doc._id}`);
+      component.props.history.push(`/documents/${response.insertedId || doc._id}`);
 
       Meteor.call('runJava', response.insertedId || doc._id, upsert.body, featureStr, thirdArg);
     }
@@ -66,15 +64,17 @@ const handleUpsert = () => {
 
 function isInt(value) {
   // eslint-disable-next-line no-bitwise
-  return !isNaN(value) && (function (x) { return (x | 0) === x; }(parseFloat(value)));
+  return !Number.isNaN(value) && ((x => (x | 0) === x)(parseFloat(value)));
 }
 
 const validate = () => {
-  jQuery.validator.addMethod('isIntValidate', function (value, element) {
-    return this.optional(element) || isInt(value);
-  }, "Must be one integer between 2 and 5. (eg. '2 3 4')");
+  jQuery.validator.addMethod(
+    'isIntValidate', (value, element) =>
+      this.optional(element) || isInt(value)
+    , "Must be one integer between 2 and 5. (eg. '2 3 4')",
+  );
 
-  jQuery.validator.addMethod('isArrayOfInts', function (value, element) {
+  jQuery.validator.addMethod('isArrayOfInts', (value, element) => {
     const arr = value.split(' ');
     let b = true;
     for (let i = 0; i < arr.length; i += 1) {
@@ -122,7 +122,6 @@ const validate = () => {
 };
 
 export default function documentEditor(options) {
-  component = options.component;
-  // console.log(component);
+  ({ component } = options);
   validate();
 }

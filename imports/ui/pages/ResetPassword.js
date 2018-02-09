@@ -23,7 +23,7 @@ export default class ResetPassword extends React.Component {
     with your new password.
             </Alert>
             <form
-              ref={ form => (this.resetPasswordForm = form) }
+              ref={ (form) => { this.resetPasswordForm = form; } }
               className="reset-password"
               onSubmit={ this.handleSubmit }
             >
@@ -31,7 +31,6 @@ export default class ResetPassword extends React.Component {
                 <ControlLabel>New Password</ControlLabel>
                 <FormControl
                   type="password"
-                  ref="newPassword"
                   name="newPassword"
                   placeholder="New Password"
                 />
@@ -40,7 +39,6 @@ export default class ResetPassword extends React.Component {
                 <ControlLabel>Repeat New Password</ControlLabel>
                 <FormControl
                   type="password"
-                  ref="repeatNewPassword"
                   name="repeatNewPassword"
                   placeholder="Repeat New Password"
                 />

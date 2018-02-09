@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 
-import { browserHistory } from 'react-router';
 import { Accounts } from 'meteor/accounts-base';
 import { Bert } from 'meteor/themeteorchef:bert';
 import './validation.js';
@@ -25,7 +24,7 @@ const signup = () => {
     if (error) {
       Bert.alert(error.reason, 'danger');
     } else {
-      browserHistory.push('/');
+      component.props.history.push('/');
       Bert.alert('Welcome!', 'success');
     }
   });
@@ -70,6 +69,6 @@ const validate = () => {
 };
 
 export default function handleSignup(options) {
-  component = options.component;
+  ({ component } = options);
   validate();
 }

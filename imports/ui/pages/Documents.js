@@ -1,8 +1,7 @@
 /* eslint-disable max-len */
 import React from 'react';
-import { Link } from 'react-router';
-import { Col, FormControl, FormGroup, Form, Button, MenuItem } from 'react-bootstrap';
-import { browserHistory } from 'react-router';
+import { Link } from 'react-router-dom';
+import { Col, FormControl, FormGroup, Form, Button } from 'react-bootstrap';
 import DocumentsList from '../containers/DocumentsList.js';
 
 class Documents extends React.Component {
@@ -53,7 +52,7 @@ class Documents extends React.Component {
             </div>
           </div>
         </Form>
-        <DocumentsList searchTerm={this.state.searchTerm}/>
+        <DocumentsList {...this.props} searchTerm={this.state.searchTerm}/>
       </Col>
     </div>
     );

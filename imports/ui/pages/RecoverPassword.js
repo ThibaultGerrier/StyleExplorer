@@ -21,14 +21,13 @@ export default class RecoverPassword extends React.Component {
               Enter your email address below to receive a link to reset your password.
             </Alert>
             <form
-              ref={ form => (this.recoverPasswordForm = form) }
+              ref={ (form) => { this.recoverPasswordForm = form; } }
               className="recover-password"
               onSubmit={ this.handleSubmit }
             >
               <FormGroup>
                 <FormControl
                   type="email"
-                  ref="emailAddress"
                   name="emailAddress"
                   placeholder="Email Address"
                 />

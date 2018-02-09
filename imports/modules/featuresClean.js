@@ -1,8 +1,17 @@
-const types = [
-  'lexicalFeatures',
-  'syntacticalFeatures',
-  'errorFeatures',
-];
+const types = {
+  lexicalFeatures: {
+    nameEn: 'All lexical features',
+    features: [],
+  },
+  syntacticalFeatures: {
+    nameEn: 'All syntactical features',
+    features: [],
+  },
+  errorFeatures: {
+    nameEn: 'All error features',
+    features: [],
+  },
+};
 
 const features = {
   avgSyllablesPerSentence: {

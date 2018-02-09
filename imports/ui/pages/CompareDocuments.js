@@ -293,10 +293,7 @@ export default class CompareDocuments extends React.Component {
     //console.log(this.state.docs);
 
     let size = documents.length;
-    //if(size < 2 || size > 6){
-    //  alert('too many / too few documents');
-    //  browserHistory.push('/');
-    //}
+
     const col = Math.floor(10 / size);
     let index=0;
     let index2=0;

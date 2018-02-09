@@ -1,11 +1,10 @@
+/* eslint-disable no-undef */
 import { Meteor } from 'meteor/meteor';
-import { browserHistory } from 'react-router';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { _ } from 'meteor/underscore';
 import { upsertDocument } from '../api/documents/methods.js';
 import './validation.js';
 import features from './features.js';
-
 
 let component;
 
@@ -39,9 +38,9 @@ const handleUpsert = () => {
     }
 
     let featureStr = '';
-    for (const item of selectedCheckboxes) {
+    selectedCheckboxes.forEach((item) => {
       featureStr += `${item} `;
-    }
+    });
     featureStr = featureStr.substring(0, featureStr.length - 1);
 
     let thirdArg;
@@ -55,31 +54,31 @@ const handleUpsert = () => {
       if (error) {
         Bert.alert(error.reason, 'danger');
       } else {
-        // component.documentEditorForm.reset();
-        // Bert.alert('Document(s) successfully uploaded', 'success');
-        // browserHistory.push('/documents');
         Meteor.call('runJava', response.insertedId, upsert.body, featureStr, thirdArg);
       }
     });
   });
 
   Bert.alert('Document(s) successfully uploaded', 'success');
-  browserHistory.push('/documents');
+  component.props.history.push('/documents');
 };
 
 function isInt(value) {
-  return !isNaN(value) && (function (x) { return (x | 0) === x; }(parseFloat(value)));
+  // eslint-disable-next-line no-bitwise
+  return !Number.isNaN(value) && ((x => (x | 0) === x)(parseFloat(value)));
 }
 
 const validate = () => {
-  jQuery.validator.addMethod('isIntValidate', function (value, element) {
-    return this.optional(element) || isInt(value);
-  }, "Must be one integer between 2 and 5. (eg. '2 3 4')");
+  jQuery.validator.addMethod(
+    'isIntValidate', (value, element) =>
+      this.optional(element) || isInt(value)
+    , "Must be one integer between 2 and 5. (eg. '2 3 4')",
+  );
 
-  jQuery.validator.addMethod('isArrayOfInts', function (value, element) {
+  jQuery.validator.addMethod('isArrayOfInts', (value, element) => {
     const arr = value.split(' ');
     let b = true;
-    for (let i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i += 1) {
       b = b && isInt(arr[i]);
       if (arr[i] < 2 || arr[i] > 5) {
         b = false;
@@ -114,6 +113,6 @@ const validate = () => {
 
 
 export default function uploadMultiple(data) {
-  component = data.component;
+  ({ component } = data);
   validate();
 }

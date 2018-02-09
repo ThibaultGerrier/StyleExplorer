@@ -2,9 +2,13 @@
   <dictionary name="thibault">
     <words>
       <w>crosshair</w>
+      <w>dropzone</w>
       <w>highcharts</w>
+      <w>ints</w>
+      <w>nums</w>
       <w>signup</w>
       <w>textresult</w>
+      <w>upsert</w>
     </words>
   </dictionary>
 </component>

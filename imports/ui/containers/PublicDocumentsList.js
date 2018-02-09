@@ -1,5 +1,7 @@
-import { composeWithTracker } from 'react-komposer';
+import { compose } from 'react-komposer';
 import { Meteor } from 'meteor/meteor';
+
+import getTrackerLoader from '../../modules/trackerLoader';
 import Documents from '../../api/documents/documents.js';
 import PublicDocumentsList from '../components/PublicDocumentsList.js';
 import Loading from '../components/Loading.js';
@@ -12,4 +14,4 @@ const composer = (params, onData) => {
   }
 };
 
-export default composeWithTracker(composer, Loading)(PublicDocumentsList);
+export default compose(getTrackerLoader(composer), Loading)(PublicDocumentsList);

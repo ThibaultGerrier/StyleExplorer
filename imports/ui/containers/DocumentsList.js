@@ -1,7 +1,9 @@
 /* eslint-disable max-len */
 
-import { composeWithTracker } from 'react-komposer';
+import { compose } from 'react-komposer';
 import { Meteor } from 'meteor/meteor';
+
+import getTrackerLoader from '../../modules/trackerLoader';
 import Documents from '../../api/documents/documents.js';
 import DocumentsList from '../components/DocumentsList.js';
 import Loading from '../components/Loading.js';
@@ -11,7 +13,7 @@ const composer = (params, onData) => {
   if (subscription.ready()) {
     let documents = null;
     if (params.searchTerm === '') {
-      documents = Documents.find({ author: Meteor.userId() }, { sort: { date: -1 } }).fetch();  // use createdAt to sort by creation date
+      documents = Documents.find({ author: Meteor.userId() }, { sort: { date: -1 } }).fetch(); // use createdAt to sort by creation date
     } else {
       const exp = new RegExp(`.*${params.searchTerm}.*`, 'i');
       documents = Documents.find({ author: Meteor.userId(), title: { $regex: exp } }, { sort: { date: -1 } }).fetch();
@@ -20,4 +22,4 @@ const composer = (params, onData) => {
   }
 };
 
-export default composeWithTracker(composer, Loading)(DocumentsList);
+export default compose(getTrackerLoader(composer), Loading)(DocumentsList);

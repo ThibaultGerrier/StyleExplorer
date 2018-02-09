@@ -1,7 +1,5 @@
 import React from 'react';
 import { Jumbotron } from 'react-bootstrap';
-import { Bert } from 'meteor/themeteorchef:bert';
-
 
 const Index = () => (
   <div className="Index">

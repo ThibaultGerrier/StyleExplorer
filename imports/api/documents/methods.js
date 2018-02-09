@@ -6,7 +6,7 @@ import Documents from './documents';
 import rateLimit from '../../modules/rate-limit.js';
 
 const config = require('../../../config/default');
-const spawn = require('child_process').spawn;
+const { spawn } = require('child_process');
 const fs = require('fs');
 
 export const upsertDocument = new ValidatedMethod({
@@ -50,7 +50,7 @@ export const changePublicity = new ValidatedMethod({
 });
 
 
-function isNumber(n) { return !isNaN(parseFloat(n)); }
+function isNumber(n) { return !Number.isNaN(parseFloat(n)); }
 
 
 function extend(a, b) {
@@ -108,13 +108,15 @@ if (Meteor.isServer) {
       console.log(runArgs);
       const cmd = spawn('cmd', ['/c', runArgs]);
       console.log('started with ', _id);
-      cmd.stdout.on('data',
+      cmd.stdout.on(
+        'data',
         Meteor.bindEnvironment((data) => {
           // console.log(data.toString('utf8'));
           if (isNumber(data)) {
             Documents.update({ _id }, { $set: { featureCompletion: parseFloat(data) } });
           }
-        }));
+        }),
+      );
       cmd.stderr.on('data', (data) => {
         console.log(`stderr: ${data}`);
       });
@@ -128,7 +130,7 @@ if (Meteor.isServer) {
         (e) => {
           console.log(e);
           throw e;
-        }
+        },
       );
 
       cmd.on('close', onClose);

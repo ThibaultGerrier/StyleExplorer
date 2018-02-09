@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 
-import { browserHistory } from 'react-router';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import './validation.js';
@@ -19,9 +18,9 @@ const login = () => {
 
       const { location } = component.props;
       if (location.state && location.state.nextPathname) {
-        browserHistory.push(location.state.nextPathname);
+        component.props.history.push(location.state.nextPathname);
       } else {
-        browserHistory.push('/');
+        component.props.history.push('/');
       }
     }
   });
@@ -52,6 +51,6 @@ const validate = () => {
 };
 
 export default function handleLogin(options) {
-  component = options.component;
+  ({ component } = options);
   validate();
 }

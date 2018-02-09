@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
-
+// this file isn't being used because of some restructuring
+/*
 import React from 'react';
 import { render } from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
@@ -52,3 +53,4 @@ Meteor.startup(() => {
     document.getElementById('react-root')
   );
 });
+*/
