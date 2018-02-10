@@ -1,14 +1,17 @@
 const types = {
   lexicalFeatures: {
     nameEn: 'All lexical features',
+    titleEn: 'Lexical features:',
     features: [],
   },
   syntacticalFeatures: {
     nameEn: 'All syntactical features',
+    titleEn: 'Syntactical features:',
     features: [],
   },
   errorFeatures: {
     nameEn: 'All error features',
+    titleEn: 'Error features:',
     features: [],
   },
 };

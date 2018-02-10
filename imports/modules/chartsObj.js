@@ -14,12 +14,11 @@ export default class Chart {
     this.chart = {};
     this.wordCount = 7;
     this.colors = config.colors;
-    //console.log(config.colors);
   }
 
   columnChart() {
     const sortAndSlice = a =>
-     Object.entries(a)
+      Object.entries(a)
         .sort(([, av], [, bv]) => bv - av)
         .slice(0, this.wordCount)
         .reduce((o, [k, v]) => {
@@ -236,7 +235,11 @@ export default class Chart {
     this.chart.series.forEach((s, i) => {
       this.chart.series[i].update({ label: { enabled: this.isBig } });
     });
+    this.options.series.forEach((s, i) => {
+      this.options.series[i].label.enabled = this.isBig;
+    });
     this.chart.update({ legend: { enabled: this.isBig } });
+    this.options.legend.enabled = this.isBig;
   }
 
   create() {

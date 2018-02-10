@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row, Glyphicon, Popover, OverlayTrigger, Panel } from 'react-bootstrap';
@@ -39,9 +40,10 @@ export default class CompareDocumentsNew extends React.Component {
       documents: [],
       bigIds: [],
       colors: {},
+      glyphTypes: {},
     };
     this.defaultColors = ['#40bf45', '#4069bf', '#bf4042', '#b840bf', '#24194d', '#bf8d40', '#d279bc'];
-    this.curColor = -1; // first call make +=1 before getting index
+    this.curColor = -1; // first call makes +=1 before getting index
   }
 
   componentWillMount() {
@@ -50,10 +52,14 @@ export default class CompareDocumentsNew extends React.Component {
     const distinctFeatures = types;
     Object.keys(distinctFeatures).forEach((key) => {
       distinctFeatures[key].features = [];
+      distinctFeatures[key].collapsed = localStorage.getItem(`panel-collapsed-${key}`) === 'true';
+      distinctFeatures[key].glyph = distinctFeatures[key].collapsed ? 'chevron-down' : 'chevron-up';
     });
     const colors = {};
+    const glyphTypes = {};
     documents.forEach((doc) => {
       colors[doc._id] = this.nextColor();
+      glyphTypes[doc._id] = 'chevron-down';
       const jsonObj = JSON.parse(doc.featureData);
       Object.keys(jsonObj).forEach((ele) => {
         const feature = ele.toString();
@@ -70,6 +76,7 @@ export default class CompareDocumentsNew extends React.Component {
       distinctFeatures[key].features.sort();
     });
     this.setState({ colors });
+    this.setState({ glyphTypes });
     this.setState({ featuresList: featureList.sort() });
     this.setState({ documents });
     this.setState({ distinctFeatures });
@@ -115,6 +122,7 @@ export default class CompareDocumentsNew extends React.Component {
         let { featuresList } = this.state;
         featuresList = updateToFirstPlace(featuresList, bigIds);
         this.setState({ featuresList });
+        chart.create();
       };
 
       const config = {
@@ -139,7 +147,6 @@ export default class CompareDocumentsNew extends React.Component {
   }
 
   componentDidUpdate() {
-    // console.log('update');
     this.state.charts.forEach((chart) => {
       chart.chart.reflow();
       chart.chart.redraw();
@@ -156,6 +163,20 @@ export default class CompareDocumentsNew extends React.Component {
     });
   }
 
+  changeGlyph(id) {
+    const { glyphTypes } = this.state;
+    glyphTypes[id] = glyphTypes[id] === 'chevron-down' ? 'chevron-up' : 'chevron-down';
+    this.setState({ glyphTypes });
+  }
+
+  changePanel(id) {
+    const { distinctFeatures } = this.state;
+    distinctFeatures[id].glyph = distinctFeatures[id].glyph === 'chevron-down' ? 'chevron-up' : 'chevron-down';
+    distinctFeatures[id].collapsed = !distinctFeatures[id].collapsed;
+    localStorage.setItem(`panel-collapsed-${id}`, distinctFeatures[id].collapsed.toString());
+    this.setState({ distinctFeatures });
+  }
+
   nextColor() {
     this.curColor += 1;
     return this.defaultColors[this.curColor];
@@ -170,13 +191,14 @@ export default class CompareDocumentsNew extends React.Component {
         <Popover id="popover-positioned-bottom" title="Choose a color for this document">
           <SliderPicker
             color={this.state.colors[id]}
-            onChangeComplete={ (col) => { this.changeColor(id, col); }}
+            onChangeComplete={ (col) => {
+              this.changeColor(id, col);
+            }}
           />
         </Popover>);
 
     return (
       <div>
-        <h1>Comparison of Documents</h1>
         <Row>
           {this.state.documents.map(doc => (
             <Col xs={6} sm={4} md={titleColSize} lg={titleColSize} key={`docTitle_${doc._id}`}>
@@ -185,8 +207,9 @@ export default class CompareDocumentsNew extends React.Component {
                   <h3 style={{ display: 'inline-block' }}>{doc.title}</h3>
                 </Col>
                 <OverlayTrigger trigger="click" placement="bottom" overlay={popOver(doc._id)}>
-                  <Glyphicon glyph='chevron-down' style={{
-                   fontSize: '1.2em', color: this.state.colors[doc._id], marginTop: '25px', cursor: 'pointer',
+                  <Glyphicon glyph={this.state.glyphTypes[doc._id]} onClick={() => { this.changeGlyph(doc._id); }}
+                    style={{
+                    fontSize: '1.2em', color: this.state.colors[doc._id], marginTop: '25px', cursor: 'pointer',
                   }}/>
                 </OverlayTrigger>
               </Row>
@@ -195,23 +218,50 @@ export default class CompareDocumentsNew extends React.Component {
         </Row>
         <br/>
 
-        <Row>
-          {this.state.featuresList.map((f, id) => (
-            this.state.bigIds.includes(f) ?
-            <div key={`col_chart_${f}`}>
-              <Col xs={12} sm={bigColSize} md={bigColSize} lg={bigColSize}>
-                <div id={`chart_${f}`}/>
-              </Col>
-              {id === this.state.bigIds.length - 1 && <div> &nbsp; <hr/> </div>}
-            </div>
-            :
-            <div key={`col_chart_${f}`}>
-              <Col xs={6} sm={4} md={3} lg={3}>
-                <div id={`chart_${f}`}/>
-              </Col>
-            </div>
-            ))}
-        </Row>
+         {this.state.bigIds.map((f, i) => (
+           <div key={`col_chart_${f}`}>
+             <Col xs={12} sm={bigColSize} md={bigColSize} lg={bigColSize}>
+               <div id={`chart_${f}`}/>
+             </Col>
+             {i === this.state.bigIds.length - 1 && <div> &nbsp; <hr/> </div>}
+           </div>
+         ))}
+
+         {Object.entries(this.state.distinctFeatures).map(([k, v]) => {
+           if (v.features.length === 0) {
+             return null;
+           }
+           return (
+             <Panel id="collapsible-panel-example-2" key={`panel_${k}`} defaultExpanded={!this.state.distinctFeatures[k].collapsed}
+               style={{ border: 'none' }}>
+               <Panel.Heading style={{ backgroundColor: 'white', border: 'none' }}>
+                 <Panel.Title toggle onClick={() => { this.changePanel(k); }}>
+                   <h3 style={{ display: 'inline-block' }}>{v.titleEn}</h3>
+                   <Glyphicon glyph={this.state.distinctFeatures[k].glyph}
+                      style={{
+                        fontSize: '1.2em', cursor: 'pointer', marginLeft: '10px',
+                      }}/>
+                 </Panel.Title>
+               </Panel.Heading>
+               <Panel.Collapse>
+                 <Panel.Body style={{ padding: '5px' }}>
+                   {v.features.map((f) => {
+                     if (this.state.bigIds.includes(f)) {
+                       return null;
+                     }
+                     return (
+                       <div key={`col_chart_${f}`}>
+                         <Col xs={6} sm={4} md={3} lg={3}>
+                           <div id={`chart_${f}`}/>
+                         </Col>
+                       </div>
+                     );
+                   })}
+                 </Panel.Body>
+               </Panel.Collapse>
+             </Panel>
+           );
+         })}
       </div>
     );
   }
