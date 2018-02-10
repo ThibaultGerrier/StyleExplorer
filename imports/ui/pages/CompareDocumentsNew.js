@@ -41,6 +41,7 @@ export default class CompareDocumentsNew extends React.Component {
       bigIds: [],
       colors: {},
       glyphTypes: {},
+      intervalId: 0,
     };
     this.defaultColors = ['#40bf45', '#4069bf', '#bf4042', '#b840bf', '#24194d', '#bf8d40', '#d279bc'];
     this.curColor = -1; // first call makes +=1 before getting index
@@ -58,7 +59,9 @@ export default class CompareDocumentsNew extends React.Component {
     const colors = {};
     const glyphTypes = {};
     documents.forEach((doc) => {
-      colors[doc._id] = this.nextColor();
+      colors[doc._id] = {
+        color: this.nextColor(),
+      };
       glyphTypes[doc._id] = 'chevron-down';
       const jsonObj = JSON.parse(doc.featureData);
       Object.keys(jsonObj).forEach((ele) => {
@@ -117,6 +120,7 @@ export default class CompareDocumentsNew extends React.Component {
         } else {
           bigIds.push(identifier);
           chart.switchSize();
+          this.scrollToTop();
         }
         this.setState({ bigIds });
         let { featuresList } = this.state;
@@ -136,7 +140,8 @@ export default class CompareDocumentsNew extends React.Component {
 
       const chart = new Chart(config);
       if (getFeatureDimension(id) === '1') {
-        chart.lineChart();
+        // chart.lineChart();
+        chart.boxplot();
       } else {
         chart.columnChart();
       }
@@ -146,7 +151,20 @@ export default class CompareDocumentsNew extends React.Component {
     this.setState({ charts });
   }
 
+  scrollStep() {
+    if (window.pageYOffset === 0) {
+      clearInterval(this.state.intervalId);
+    }
+    window.scroll(0, window.pageYOffset - 50);
+  }
+
+  scrollToTop() {
+    const intervalId = setInterval(this.scrollStep.bind(this), 16.66);
+    this.setState({ intervalId });
+  }
+
   componentDidUpdate() {
+    // console.log(this.state.charts);
     this.state.charts.forEach((chart) => {
       chart.chart.reflow();
       chart.chart.redraw();
@@ -155,11 +173,10 @@ export default class CompareDocumentsNew extends React.Component {
 
   changeColor(docId, color) {
     const colorState = this.state.colors;
-    colorState[docId] = color.hex;
+    colorState[docId].color = color.hex;
     this.setState({ colors: colorState });
     this.state.charts.forEach((chart) => {
-      const series = chart.chart.get(docId);
-      series.update(({ color: color.hex }));
+      chart.setColor(docId, color.hex);
     });
   }
 
@@ -185,12 +202,12 @@ export default class CompareDocumentsNew extends React.Component {
   render() {
     // console.log('render');
     const bigColSize = this.state.bigIds.length === 1 ? 12 : 6;
-    const titleColSize = this.state.documents.length >= 4 ? 2 : 3;
+    const titleColSize = this.state.documents.length > 4 ? 2 : 3;
 
     const popOver = id => (
         <Popover id="popover-positioned-bottom" title="Choose a color for this document">
           <SliderPicker
-            color={this.state.colors[id]}
+            color={this.state.colors[id].color}
             onChangeComplete={ (col) => {
               this.changeColor(id, col);
             }}
@@ -203,13 +220,13 @@ export default class CompareDocumentsNew extends React.Component {
           {this.state.documents.map(doc => (
             <Col xs={6} sm={4} md={titleColSize} lg={titleColSize} key={`docTitle_${doc._id}`}>
               <Row>
-                <Col xs={11} sm={11} md={11} lg={11}>
+                <Col xs={10} sm={10} md={10} lg={10}>
                   <h3 style={{ display: 'inline-block' }}>{doc.title}</h3>
                 </Col>
                 <OverlayTrigger trigger="click" placement="bottom" overlay={popOver(doc._id)}>
                   <Glyphicon glyph={this.state.glyphTypes[doc._id]} onClick={() => { this.changeGlyph(doc._id); }}
                     style={{
-                    fontSize: '1.2em', color: this.state.colors[doc._id], marginTop: '25px', cursor: 'pointer',
+                    fontSize: '1.2em', color: this.state.colors[doc._id].color, marginTop: '25px', cursor: 'pointer',
                   }}/>
                 </OverlayTrigger>
               </Row>

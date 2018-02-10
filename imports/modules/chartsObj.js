@@ -1,6 +1,7 @@
 const Highcharts = require('highcharts');
 require('highcharts/modules/exporting')(Highcharts);
 require('highcharts/modules/series-label')(Highcharts);
+require('highcharts/highcharts-more')(Highcharts);
 
 export default class Chart {
   constructor(config) {
@@ -11,16 +12,239 @@ export default class Chart {
     this.onZoomClick = config.onZoomClick;
     this.unit = config.unit;
     this.isBig = false;
-    this.chart = {};
     this.wordCount = 7;
     this.colors = config.colors;
   }
 
+  getDefaultOptions(type) {
+    const toBoxPlot = {
+      text: 'To a Boxplot',
+      onclick: () => {
+        this.boxplot();
+      },
+    };
+    const toLineChart = {
+      text: 'To a Line-chart',
+      onclick: () => {
+        this.lineChart();
+      },
+    };
+    const extraCombi = {
+      text: 'Add combination',
+      onclick: () => {
+        this.wordCount += 1;
+        this.columnChart();
+      },
+    };
+    const removeCombi = {
+      text: 'Remove combination',
+      onclick: () => {
+        if (this.wordCount > 1) {
+          this.wordCount -= 1;
+          this.columnChart();
+        } else {
+          alert('Cannot remove more combinations');
+        }
+      },
+    };
+    const buttons = ['separator', 'downloadJPEG', 'downloadPDF'];
+
+    switch (this.type) {
+      case 'line':
+        buttons.unshift(toBoxPlot);
+        break;
+      case 'boxplot':
+        buttons.unshift(toLineChart);
+        break;
+      case 'column':
+        buttons.unshift(removeCombi);
+        buttons.unshift(extraCombi);
+        break;
+      default:
+        console.log('Unknown chart type', this.type);
+    }
+
+    const that = this;
+    return {
+      chart: {
+        type,
+      },
+      title: {
+        text: this.title,
+      },
+      legend: {
+        enabled: false,
+      },
+      credits: {
+        enabled: false,
+      },
+      exporting: {
+        filename: `${this.htmlId}-${Object.values(this.data).map(d => d.name.replace(/ /g, '_')).join('-')}`,
+        buttons: {
+          contextButton: {
+            menuItems: buttons,
+          },
+          customButton: {
+            y: 25,
+            x: 5,
+            onclick() {
+              that.onZoomClick(that.htmlId.replace('chart_', ''), that);
+            },
+            symbol: 'url(/lupe-19.jpg)',
+            symbolY: 20,
+            symbolX: 20,
+          },
+        },
+      },
+    };
+  }
+
+  boxplot() {
+    this.type = 'boxplot';
+    const categories = Object.values(this.data).map(doc => doc.name);
+    const outliers = [];
+    // const meanofValues = 10;
+
+    function mean(data) {
+      const len = data.length;
+      let sum = 0;
+      for (let i = 0; i < len; i += 1) {
+        sum += parseFloat(data[i]);
+      }
+      return (sum / len);
+    }
+
+    function numSort(a, b) {
+      return a - b;
+    }
+
+    function getPercentile(dataSrc, percentile) {
+      const data = dataSrc.slice(); // copy by value
+      data.sort(numSort);
+      const index = (percentile / 100) * data.length;
+      let result;
+      if (Math.floor(index) === index) {
+        result = (data[(index - 1)] + data[index]) / 2;
+      } else {
+        result = data[Math.floor(index)];
+      }
+      return result;
+    }
+
+    function getBoxValues(data, x, color, doc) {
+      const nx = typeof x === 'undefined' ? 0 : x;
+      const boxData = {};
+      const out = {
+        name: 'Outlier',
+        type: 'scatter',
+        color,
+        tooltip: {
+          pointFormat: 'Value: {point.y:.3f}',
+        },
+        data: [],
+        id: `${doc.id}-outliers`,
+        marker: {
+          symbol: 'circle',
+        },
+      };
+      // const min = Math.min(...data);
+      // const max = Math.max(...data);
+      const q1 = getPercentile(data, 25);
+      const median = getPercentile(data, 50);
+      const q3 = getPercentile(data, 75);
+      const iqr = q3 - q1;
+      const lowerFence = q1 - (iqr * 1.5);
+      const upperFence = q1 + (iqr * 1.5);
+
+      for (let i = 0; i < data.length; i += 1) {
+        if (data[i] < lowerFence || data[i] > upperFence) {
+          out.data.push([nx, data[i]]);
+        }
+      }
+      boxData.values = {
+        x: nx,
+        low: lowerFence,
+        q1,
+        median,
+        q3,
+        high: upperFence,
+        color,
+        key: doc.name,
+        id: doc.id,
+      };
+      outliers.push(out);
+      return boxData;
+    }
+
+    const boxData = [];
+    const meanData = [];
+    let boxValues;
+    Object.values(this.data).forEach((doc, i) => {
+      const { data } = doc;
+      // console.log(data);
+
+      boxValues = getBoxValues(data, i, this.colors[doc.id].color, doc);
+      boxData.push(boxValues.values);
+      meanData.push([i, mean(data)]);
+    });
+    // console.log(meanData);
+    // console.log(boxData);
+    // console.log(outliers);
+    const series = [];
+
+    series.push({
+      id: 'outliers',
+      name: 'Outliers',
+      type: 'scatter',
+      color: '#0000ff',
+      marker: {
+        enabled: true,
+        radius: 2,
+        fillColor: 'transparent',
+        lineColor: 'rgba(40,40,56,0.5)',
+        lineWidth: 1,
+      },
+      data: boxValues.outliers,
+    });
+
+    const options = this.getDefaultOptions('boxplot');
+    options.xAxis = {
+      categories,
+    };
+
+    options.yAxis = {
+      title: {
+        text: 'Values',
+      },
+    };
+
+    options.series = [{
+      data: boxData,
+      tooltip: {
+        headerFormat: '',
+        pointFormat: '<span style="color:{point.color}">●</span> <b> {point.key}</b><br/>' +
+          'Maximum: {point.high:.3f}<br/>' +
+          'Upper quartile: {point.q3:.3f}<br/>' +
+          'Median: {point.median:.3f}<br/>' +
+          'Lower quartile: {point.q1:.3f}<br/>' +
+          'Minimum: {point.low:.3f}<br/>',
+        footerFormat: '',
+        useHTML: true,
+        shared: true,
+      },
+    }];
+
+    options.series = options.series.concat(outliers);
+
+    this.setOptions(options);
+  }
+
   columnChart() {
-    const sortAndSlice = a =>
+    this.type = 'column';
+    const sortAndSlice = (a, extra) =>
       Object.entries(a)
         .sort(([, av], [, bv]) => bv - av)
-        .slice(0, this.wordCount)
+        .slice(0, extra ? this.wordCount + extra : this.wordCount)
         .reduce((o, [k, v]) => {
           const i = {};
           i[k] = v;
@@ -36,7 +260,7 @@ export default class Chart {
       Object.entries(doc.data).forEach(([key, value]) => {
         occ[key] = avg(value);
       });
-      occPerDoc[doc.id] = sortAndSlice(occ);
+      occPerDoc[doc.id] = sortAndSlice(occ, 5);
     });
 
     let best = {};
@@ -70,69 +294,40 @@ export default class Chart {
         id: doc.id,
         name: doc.name,
         data,
-        color: this.colors[doc.id],
+        color: this.colors[doc.id].color,
       });
     });
 
-    const that = this;
-    const options = {
-      chart: {
-        type: 'column',
-      },
-      title: {
-        text: this.title,
-      },
-      legend: {
-        enabled: false,
-      },
-      xAxis: {
-        categories,
-        crosshair: true,
-      },
-      yAxis: {
-        min: 0,
-      },
-      tooltip: {
-        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+    const options = this.getDefaultOptions('column');
+
+    options.xAxis = {
+      categories,
+      crosshair: true,
+    };
+
+    options.yAxis = {
+      min: 0,
+    };
+    options.tooltip = {
+      headerFormat: '<span>{point.key}</span><table>',
+      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
         '<td style="padding:0"><b>{point.y:.3f}</b></td></tr>',
-        footerFormat: '</table>',
-        useHTML: true,
-        shared: true,
-      },
-      plotOptions: {
-        column: {
-          pointPadding: 0.2,
-          borderWidth: 0,
-        },
-      },
-      series,
-      credits: {
-        enabled: false,
-      },
-      exporting: {
-        filename: `${this.htmlId}-${Object.values(this.data).map(d => d.name.replace(/ /g, '_')).join('-')}`,
-        buttons: {
-          contextButton: {
-            menuItems: ['download', 'downloadJPEG', 'downloadPDF'],
-          },
-          customButton: {
-            y: 25,
-            x: 5,
-            onclick() {
-              that.onZoomClick(that.htmlId.replace('chart_', ''), that);
-            },
-            symbol: 'url(/lupe-19.jpg)',
-            symbolY: 20,
-            symbolX: 20,
-          },
-        },
+      footerFormat: '</table>',
+      useHTML: true,
+      shared: true,
+    };
+    options.plotOptions = {
+      column: {
+        pointPadding: 0.2,
+        borderWidth: 0,
       },
     };
+    options.series = series;
     this.setOptions(options);
   }
 
   lineChart() {
+    this.type = 'line';
     const series = [];
     Object.values(this.data).forEach((doc) => {
       const values = doc.data;
@@ -144,102 +339,114 @@ export default class Chart {
         id: doc.id,
         name: doc.name,
         data: mappedData,
-        color: this.colors[doc.id],
+        color: this.colors[doc.id].color,
         label: {
           enabled: false,
         },
       });
     });
 
-    const that = this;
-    const options = {
-      chart: {
-        type: 'line',
-      },
-      title: {
-        text: this.title,
-      },
-      legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle',
-        enabled: false,
-      },
-      xAxis: {
-        crosshair: true,
-      },
-      tooltip: {
-        headerFormat: '<span style="font-size:10px">{point.x:.3f}</span><table>',
-        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+    const options = this.getDefaultOptions('line');
+    options.legend = {
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'middle',
+      enabled: false,
+    };
+    options.xAxis = {
+      crosshair: true,
+    };
+    options.tooltip = {
+      headerFormat: '<span>{point.x:.3f}</span><table>',
+      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
         '<td style="padding:0"><b>{point.y:.3f}</b></td></tr>',
-        footerFormat: '</table>',
-        useHTML: true,
-      },
-      plotOptions: {
-        series: {
-          label: {
-            connectorAllowed: false,
-          },
-          pointStart: 0,
+      footerFormat: '</table>',
+      useHTML: true,
+    };
+    options.plotOptions = {
+      series: {
+        label: {
+          connectorAllowed: false,
         },
+        pointStart: 0,
       },
-      series,
-      responsive: {
-        rules: [{
-          condition: {
-            maxWidth: 500,
-          },
-          chartOptions: {
-            legend: {
-              layout: 'horizontal',
-              align: 'center',
-              verticalAlign: 'bottom',
-            },
-          },
-        }],
-      },
-      credits: {
-        enabled: false,
-      },
-      exporting: {
-        filename: `${this.htmlId}-${Object.values(this.data).map(d => d.name.replace(/ /g, '_')).join('-')}`,
-        buttons: {
-          contextButton: {
-            menuItems: ['download', 'downloadJPEG', 'downloadPDF'],
-          },
-          customButton: {
-            y: 25,
-            x: 5,
-            onclick() {
-              that.onZoomClick(that.htmlId.replace('chart_', ''), that);
-            },
-            symbol: 'url(/lupe-19.jpg)',
-            symbolY: 20,
-            symbolX: 20,
+    };
+    options.series = series;
+    options.responsive = {
+      rules: [{
+        condition: {
+          maxWidth: 500,
+        },
+        chartOptions: {
+          legend: {
+            layout: 'horizontal',
+            align: 'center',
+            verticalAlign: 'bottom',
           },
         },
-      },
+      }],
     };
     this.setOptions(options);
   }
 
   setOptions(options) {
-    if (this.chart && this.options) {
-      this.chart.update(options);
-    }
     this.options = options;
+    if (this.chart && this.options) {
+      this.create();
+      this.updateLabelLegend();
+    }
+  }
+
+  updateLabelLegend() {
+    if (this.type === 'line') {
+      this.chart.series.forEach((s, i) => {
+        this.chart.series[i].update({ label: { enabled: this.isBig } });
+      });
+      this.options.series.forEach((s, i) => {
+        this.options.series[i].label.enabled = this.isBig;
+      });
+    }
+    if (this.type === 'line' || this.type === 'column') {
+      this.chart.update({ legend: { enabled: this.isBig } });
+      this.options.legend.enabled = this.isBig;
+    }
+  }
+
+  setColor(docId, color) {
+    const series = this.chart.get(docId);
+    const seriesOutliers = this.chart.get(`${docId}-outliers`);
+    if (series && series.color) {
+      series.update({ color });
+    }
+    if (seriesOutliers && seriesOutliers.color) {
+      seriesOutliers.update({ color });
+    }
+    // } else {
+    //   console.log('else');
+    //   console.log(docId, this.type);
+    // this.chart.series.forEach((s) => {
+    //   const { data } = s;
+    //   data.forEach((d, i) => {
+    //     console.log(d);
+    //     data[i].color = color;
+    //     if (data[i].fillColor) {
+    //       data[i].fillColor = color;
+    //     }
+    //   });
+    //   series.update(({ data }));
+    // });
+    // }
+    // this.colors[docId].color = color;
+    // this.options.series.forEach((s, i) => {
+    //   if (s.id === docId) {
+    //     this.options.series[i].color = color;
+    //   }
+    // });
   }
 
   switchSize() {
     this.isBig = !this.isBig;
-    this.chart.series.forEach((s, i) => {
-      this.chart.series[i].update({ label: { enabled: this.isBig } });
-    });
-    this.options.series.forEach((s, i) => {
-      this.options.series[i].label.enabled = this.isBig;
-    });
-    this.chart.update({ legend: { enabled: this.isBig } });
-    this.options.legend.enabled = this.isBig;
+    this.updateLabelLegend();
   }
 
   create() {
