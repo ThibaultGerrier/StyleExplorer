@@ -1,13 +1,10 @@
 import { Meteor } from 'meteor/meteor';
-import { compose } from 'react-komposer';
-
-import getTrackerLoader from '../../modules/trackerLoader';
 import Documents from '../../api/documents/documents.js';
 import ViewDocument from '../pages/ViewDocument.js';
 import Loading from '../components/Loading.js';
+import container from '../../modules/container';
 
 const composer = (params, onData) => {
-  console.log(params);
   const documentId = params.match.params._id;
   const subscription = Meteor.subscribe('documents.view', documentId);
 
@@ -23,4 +20,5 @@ const composer = (params, onData) => {
   }
 };
 
-export default compose(getTrackerLoader(composer), Loading)(ViewDocument);
+export default container(composer, ViewDocument, { loadingHandler: Loading });
+

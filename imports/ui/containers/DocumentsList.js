@@ -1,9 +1,6 @@
 /* eslint-disable max-len */
-
-import { compose } from 'react-komposer';
 import { Meteor } from 'meteor/meteor';
-
-import getTrackerLoader from '../../modules/trackerLoader';
+import container from '../../modules/container';
 import Documents from '../../api/documents/documents.js';
 import DocumentsList from '../components/DocumentsList.js';
 import Loading from '../components/Loading.js';
@@ -22,4 +19,5 @@ const composer = (params, onData) => {
   }
 };
 
-export default compose(getTrackerLoader(composer), Loading)(DocumentsList);
+export default container(composer, DocumentsList, { loadingHandler: Loading });
+

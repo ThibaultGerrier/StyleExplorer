@@ -1,10 +1,8 @@
 import { Meteor } from 'meteor/meteor';
-import { compose } from 'react-komposer';
-
-import getTrackerLoader from '../../modules/trackerLoader';
 import Documents from '../../api/documents/documents.js';
 import CompareDocuments from '../pages/CompareDocumentsNew.js';
 import Loading from '../components/Loading.js';
+import container from '../../modules/container';
 
 const composer = (params, onData) => {
   const docList = params.match.params._ids.split('.');
@@ -21,4 +19,4 @@ const composer = (params, onData) => {
   }
 };
 
-export default compose(getTrackerLoader(composer), Loading)(CompareDocuments);
+export default container(composer, CompareDocuments, { loadingHandler: Loading });

@@ -1,3 +1,5 @@
+// nobody uses this after refactoring
+
 import { compose } from 'react-komposer';
 import { Meteor } from 'meteor/meteor';
 
