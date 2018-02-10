@@ -67,7 +67,9 @@ export default class DocumentEditor extends React.Component {
             </FormGroup>
           </Col>
           <Col xs={ 3 } sm={ 3 } md={ 3 } >
-            <Dropzone onDrop={this.onDrop} multiple={false} accept={'text/plain'} style={{ borderWidth: '2px', borderColor: 'black', borderStyle: 'dashed', borderRadius: '4px', margin: '20px', padding: '20px', width: '200px', transition: 'all 0.5s' }}>
+            <Dropzone onDrop={this.onDrop} multiple={false} accept={'text/plain'} style={{
+             borderWidth: '2px', borderColor: 'black', borderStyle: 'dashed', borderRadius: '4px', margin: '20px', padding: '20px', width: '200px', transition: 'all 0.5s',
+            }}>
               <h4 style={{ textAlign: 'center' }}>Try dropping a text files here, or click to select file to upload.<br/><Glyphicon glyph="upload" style={{ fontSize: '1.5em' }}/></h4>
             </Dropzone>
           </Col>

@@ -62,29 +62,37 @@ export default class ViewDocument extends React.Component {
     return Object.keys(jsonObj).map(ele =>
       (
         <Col xs={12} sm={6} md={col} key={this.getKey('json')}>
-          <Panel header={ele.toString()} collapsible={collapsible} defaultExpanded={defaultExpanded} style={{ cursor: 'pointer' }}>
-            [{Array.isArray(jsonObj[ele]) ? // one dimensional array
-            jsonObj[ele].map(num => (
-              num % 1 !== 0 ?
-                num.toFixed(3)
-                : num
-
-            )).join(' ,')
-            : // 2 dimensions (eg. n-grams)
-            Object.keys(jsonObj[ele]).map(elearr => (
-              <div key={this.getKey('list')}>
-                <Col xs={12} sm={6} md={6}>
-                  {elearr} :
-                </Col>
-                {
-                  jsonObj[ele][elearr].map(num => (
+          <Panel id="collapsible-panel-example-2" defaultExpanded={defaultExpanded} style={{ cursor: 'pointer' }}>
+            <Panel.Heading>
+              <Panel.Title toggle>
+                {ele.toString()}
+              </Panel.Title>
+            </Panel.Heading>
+            <Panel.Collapse>
+              <Panel.Body>
+                [{Array.isArray(jsonObj[ele]) ? // one dimensional array
+                jsonObj[ele].map(num => (
+                  num % 1 !== 0 ?
                     num.toFixed(3)
-                  )).join(' ,')
-                }
-                <br/>
-              </div>
-            ))
-          }]
+                    : num
+                )).join(' ,')
+                : // 2 dimensions (eg. n-grams)
+                Object.keys(jsonObj[ele]).map(elearr => (
+                  <div key={this.getKey('list')}>
+                    <Col xs={12} sm={6} md={6}>
+                      {elearr} :
+                    </Col>
+                    {
+                      jsonObj[ele][elearr].map(num => (
+                        num.toFixed(3)
+                      )).join(' ,')
+                    }
+                    <br/>
+                  </div>
+                ))
+              }]
+              </Panel.Body>
+            </Panel.Collapse>
           </Panel>
         </Col>
       ));
@@ -168,8 +176,7 @@ export default class ViewDocument extends React.Component {
 
         {doc.options &&
           <div>
-            <Button bsSize="large" block onClick={() => this.setState({ openText: !this.state.openText })}>Show
-              text</Button>
+            <Button bsSize="large" block onClick={() => this.setState({ openText: !this.state.openText })}>Show text</Button>
             <Collapse in={this.state.openText}>
               <div >
                 <div style={{ whiteSpace: 'pre-wrap' }}>

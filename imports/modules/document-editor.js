@@ -67,14 +67,16 @@ function isInt(value) {
   return !Number.isNaN(value) && ((x => (x | 0) === x)(parseFloat(value)));
 }
 
+// do not change functions to arrow functions as the "this" context will get lost
 const validate = () => {
   jQuery.validator.addMethod(
-    'isIntValidate', (value, element) =>
-      this.optional(element) || isInt(value)
+    'isIntValidate', function (value, element) {
+      return this.optional(element) || isInt(value);
+    }
     , "Must be one integer between 2 and 5. (eg. '2 3 4')",
   );
 
-  jQuery.validator.addMethod('isArrayOfInts', (value, element) => {
+  jQuery.validator.addMethod('isArrayOfInts', function (value, element) {
     const arr = value.split(' ');
     let b = true;
     for (let i = 0; i < arr.length; i += 1) {

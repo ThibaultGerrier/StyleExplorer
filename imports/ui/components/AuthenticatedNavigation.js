@@ -1,13 +1,13 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 
 const handleLogout = (props) => {
-  console.log(props);
   Meteor.logout(() => {
-    props.history.push('/login'); // TODO fix, doesn't work
+    props.history.push('/');
     Bert.alert('Bye!', 'success');
   });
 };
@@ -38,4 +38,4 @@ const AuthenticatedNavigation = props => (
     </Nav>
   </div>);
 
-export default AuthenticatedNavigation;
+export default withRouter(AuthenticatedNavigation);

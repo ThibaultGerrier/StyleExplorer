@@ -24,23 +24,25 @@ import PublicDocuments from '../pages/PublicDocuments';
 import CompareDocuments from '../containers/CompareDocuments';
 import About from '../pages/About';
 
-const App = appProps => (
+class App extends React.Component {
+  render() {
+    return (
   <Router>
     <div className="App">
-      <AppNavigation {...appProps} />
+      <AppNavigation {...this.props} />
       <Grid>
         <Switch>
           <Route exact name="index" path="/" component={Index}/>
-          <Authenticated exact path="/documents" component={Documents} {...appProps} />
-          <Authenticated exact path="/documents/new" component={NewDocument} {...appProps} />
-          <Authenticated exact path="/documents/new-multiple" component={NewMultipleDocuments} {...appProps} />
-          <Authenticated exact path="/documents/:_id" component={ViewDocument} {...appProps} />
-          <Authenticated exact path="/documents/:_id/edit" component={EditDocument} {...appProps} />
-          <Authenticated exact path="/compare/:_ids/" component={CompareDocuments} {...appProps} />
-          <Authenticated exact path="/public" component={PublicDocuments} {...appProps} />
-          <Public path="/signup" component={Signup} {...appProps} />
-          <Public path="/login" component={Login} {...appProps} />
-          <Public path="/about" component={About} {...appProps} />
+          <Authenticated exact path="/documents" component={Documents} {...this.props} />
+          <Authenticated exact path="/documents/new" component={NewDocument} {...this.props} />
+          <Authenticated exact path="/documents/new-multiple" component={NewMultipleDocuments} {...this.props} />
+          <Authenticated exact path="/documents/:_id" component={ViewDocument} {...this.props} />
+          <Authenticated exact path="/documents/:_id/edit" component={EditDocument} {...this.props} />
+          <Authenticated exact path="/compare/:_ids/" component={CompareDocuments} {...this.props} />
+          <Authenticated exact path="/public" component={PublicDocuments} {...this.props} />
+          <Public path="/signup" component={Signup} {...this.props} />
+          <Public path="/login" component={Login} {...this.props} />
+          <Public path="/about" component={About} {...this.props} />
           <Route name="recover-password" path="/recover-password" component={RecoverPassword}/>
           <Route name="reset-password" path="/reset-password/:token" component={ResetPassword}/>
           <Route component={NotFound}/>
@@ -48,7 +50,10 @@ const App = appProps => (
       </Grid>
     </div>
   </Router>
-);
+    );
+  }
+}
+
 
 App.propTypes = {
   loggingIn: PropTypes.bool,

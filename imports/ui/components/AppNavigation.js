@@ -6,19 +6,22 @@ import PublicNavigation from './PublicNavigation.js';
 import AuthenticatedNavigation from './AuthenticatedNavigation.js';
 
 
-const AppNavigation = props => (
-  <Navbar>
-    <Navbar.Header>
-      <Navbar.Brand>
-        <Link to="/">Writing Styles</Link>
-      </Navbar.Brand>
-      <Navbar.Toggle />
-    </Navbar.Header>
-    <Navbar.Collapse>
-      { props.authenticated ? <AuthenticatedNavigation {...props} /> : <PublicNavigation /> }
-    </Navbar.Collapse>
-  </Navbar>
-);
+const AppNavigation = props =>
+  (
+    <Navbar>
+      <Navbar.Header>
+        <Navbar.Brand>
+          <Link to="/">Writing Styles</Link>
+        </Navbar.Brand>
+        <Navbar.Toggle/>
+      </Navbar.Header>
+      <Navbar.Collapse>
+        {props.authenticated ?
+          <AuthenticatedNavigation {...props} />
+          : <PublicNavigation/>}
+      </Navbar.Collapse>
+    </Navbar>
+  );
 
 
 AppNavigation.propTypes = {
