@@ -70,9 +70,21 @@ function hashCode(str) {
   return hash;
 }
 
-function isWindows() {
-  return process.platform === 'win32';
+function spawnWindowsProcess(dir, cmd) {
+  return spawn('cmd.exe', ['/c', cmd], { cwd: dir });
 }
+
+function spawnLinuxProcess(dir, cmd) {
+  const cmdParts = cmd.split(/\s+/);
+  return spawn(cmdParts[0], cmdParts.slice(1), { cwd: dir });
+}
+
+function spawnProcess(dir, cmd) {
+  return (process.platform.toLowerCase().indexOf('win') >= 0)
+    ? spawnWindowsProcess(dir, cmd)
+    : spawnLinuxProcess(dir, cmd);
+}
+
 
 function javaDone(_id, hash) {
   // console.log('java is done');
@@ -108,13 +120,7 @@ if (Meteor.isServer) {
 
       fs.writeFileSync(`${Meteor.absolutePath}/texts/text_${_id}${hash}.txt`, cleanText);
 
-      let runArgs = `-jar ${config.jarLocation} ${_id}${hash} ${thirdArg} ${features}`;
-      if (isWindows()) {
-        runArgs = `java ${runArgs}`;
-      }
-
-      console.log(runArgs);
-      const cmd = isWindows() ? spawn('cmd', ['/c', runArgs]) : spawn('java', [runArgs]);
+      const cmd = spawnProcess('.', `java -jar ${config.jarLocation} ${_id}${hash} ${thirdArg} ${features}`);
       console.log('started with ', _id);
       cmd.stdout.on(
         'data',
