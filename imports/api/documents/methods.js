@@ -118,9 +118,10 @@ if (Meteor.isServer) {
 
       const hash = Math.abs(hashCode(features));
 
-      fs.writeFileSync(`${Meteor.absolutePath}/texts/text_${_id}${hash}.txt`, cleanText);
+      const fileLocationName = `${Meteor.absolutePath}/texts/text_${_id}${hash}.txt`;
+      fs.writeFileSync(fileLocationName, cleanText);
 
-      const cmd = spawnProcess('.', `java -jar ${config.jarLocation} ${_id}${hash} ${thirdArg} ${features}`);
+      const cmd = spawnProcess('.', `java -jar ${config.jarLocation} ${fileLocationName} ${thirdArg} ${features}`);
       console.log('started with ', _id);
       cmd.stdout.on(
         'data',
