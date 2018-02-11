@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="037d7edd-422f-47f6-a68a-4ce539764e78" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/thibault.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/thibault.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/imports/modules/chartsObj.js" afterPath="$PROJECT_DIR$/imports/modules/chartsObj.js" />
-      <change beforePath="$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js" afterPath="$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js" />
+      <change beforePath="$PROJECT_DIR$/imports/api/documents/methods.js" afterPath="$PROJECT_DIR$/imports/api/documents/methods.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -26,45 +24,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CompareDocumentsNew.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js">
+      <file leaf-file-name="methods.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/imports/api/documents/methods.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="259">
-              <caret line="208" column="28" lean-forward="true" selection-start-line="208" selection-start-column="28" selection-end-line="208" selection-end-column="28" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <element signature="e#29#55#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="368">
+              <caret line="114" column="0" lean-forward="true" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="chartsObj.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/imports/modules/chartsObj.js">
+      <file leaf-file-name="default.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/default.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="642" column="20" lean-forward="false" selection-start-line="642" selection-start-column="20" selection-end-line="642" selection-end-column="20" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <element signature="e#7828#9318#0" expanded="false" />
-                <element signature="e#9332#12739#0" expanded="false" />
-                <element signature="e#12757#14817#0" expanded="false" />
-                <element signature="e#14833#15501#0" expanded="false" />
-                <marker date="1518378773984" expanded="true" signature="8647:8677" ph="..." />
-                <marker date="1518378773984" expanded="true" signature="8721:8730" ph="..." />
-                <marker date="1518378773984" expanded="true" signature="12280:12299" ph="..." />
-                <marker date="1518378773984" expanded="true" signature="14446:14476" ph="..." />
-                <marker date="1518378773984" expanded="true" signature="14520:14529" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="featuresClean.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/imports/modules/featuresClean.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="8" column="2" lean-forward="false" selection-start-line="8" selection-start-column="2" selection-end-line="8" selection-end-column="2" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -139,7 +113,6 @@
         <option value="$PROJECT_DIR$/imports/ui/components/DocumentsList.js" />
         <option value="$PROJECT_DIR$/imports/ui/pages/DragableCompare.js" />
         <option value="$PROJECT_DIR$/imports/ui/pages/CompareDocuments.js" />
-        <option value="$PROJECT_DIR$/imports/api/documents/methods.js" />
         <option value="$PROJECT_DIR$/imports/ui/pages/About.js" />
         <option value="$PROJECT_DIR$/imports/startup/client/routes.js" />
         <option value="$PROJECT_DIR$/imports/ui/pages/Signup.js" />
@@ -176,6 +149,7 @@
         <option value="$PROJECT_DIR$/imports/modules/featuresClean.js" />
         <option value="$PROJECT_DIR$/imports/modules/chartsObj.js" />
         <option value="$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js" />
+        <option value="$PROJECT_DIR$/imports/api/documents/methods.js" />
       </list>
     </option>
   </component>
@@ -255,7 +229,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -266,33 +240,25 @@
             <path>
               <item name="WritingStyles" type="b2602c69:ProjectViewProjectNode" />
               <item name="WritingStyles" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="WritingStyles" type="b2602c69:ProjectViewProjectNode" />
+              <item name="WritingStyles" type="462c0819:PsiDirectoryNode" />
               <item name="imports" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="WritingStyles" type="b2602c69:ProjectViewProjectNode" />
               <item name="WritingStyles" type="462c0819:PsiDirectoryNode" />
               <item name="imports" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="api" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="WritingStyles" type="b2602c69:ProjectViewProjectNode" />
               <item name="WritingStyles" type="462c0819:PsiDirectoryNode" />
               <item name="imports" type="462c0819:PsiDirectoryNode" />
-              <item name="ui" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="WritingStyles" type="b2602c69:ProjectViewProjectNode" />
-              <item name="WritingStyles" type="462c0819:PsiDirectoryNode" />
-              <item name="imports" type="462c0819:PsiDirectoryNode" />
-              <item name="ui" type="462c0819:PsiDirectoryNode" />
-              <item name="layouts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="WritingStyles" type="b2602c69:ProjectViewProjectNode" />
-              <item name="WritingStyles" type="462c0819:PsiDirectoryNode" />
-              <item name="imports" type="462c0819:PsiDirectoryNode" />
-              <item name="ui" type="462c0819:PsiDirectoryNode" />
-              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="api" type="462c0819:PsiDirectoryNode" />
+              <item name="documents" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="WritingStyles" type="b2602c69:ProjectViewProjectNode" />
@@ -308,7 +274,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -396,28 +362,28 @@
       <workItem from="1518280513631" duration="18676000" />
       <workItem from="1518300832195" duration="1000" />
       <workItem from="1518335315036" duration="12075000" />
-      <workItem from="1518365340581" duration="10185000" />
+      <workItem from="1518365340581" duration="10284000" />
+      <workItem from="1518383104657" duration="2134000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="146629000" />
+    <option name="totallyTimeSpent" value="148862000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15724947" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.60883975" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1359116" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15724947" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -426,6 +392,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -466,13 +433,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/imports/api/documents/documents.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="80" column="13" lean-forward="false" selection-start-line="80" selection-start-column="2" selection-end-line="80" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/imports/ui/pages/NewDocument.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="138">
@@ -617,13 +577,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="188">
           <caret line="2026" column="8" lean-forward="false" selection-start-line="2026" selection-start-column="8" selection-end-line="2026" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/imports/api/documents/methods.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="12" column="9" lean-forward="false" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -803,7 +756,28 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1106461">
           <caret line="48107" column="6" lean-forward="false" selection-start-line="48107" selection-start-column="6" selection-end-line="48107" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="23">
+          <caret line="208" column="28" lean-forward="false" selection-start-line="208" selection-start-column="28" selection-end-line="208" selection-end-column="28" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imports/modules/chartsObj.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="642" column="20" lean-forward="false" selection-start-line="642" selection-start-column="20" selection-end-line="642" selection-end-column="20" />
+          <folding>
+            <element signature="n#!!doc" expanded="false" />
+            <element signature="e#7828#9318#0" expanded="false" />
+            <element signature="e#9332#12739#0" expanded="false" />
+            <element signature="e#12757#14817#0" expanded="false" />
+            <element signature="e#14833#15501#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -815,33 +789,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/imports/modules/chartsObj.js">
+    <entry file="file://$PROJECT_DIR$/config/default.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="642" column="20" lean-forward="false" selection-start-line="642" selection-start-column="20" selection-end-line="642" selection-end-column="20" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#7828#9318#0" expanded="false" />
-            <element signature="e#9332#12739#0" expanded="false" />
-            <element signature="e#12757#14817#0" expanded="false" />
-            <element signature="e#14833#15501#0" expanded="false" />
-            <marker date="1518378773984" expanded="true" signature="8647:8677" ph="..." />
-            <marker date="1518378773984" expanded="true" signature="8721:8730" ph="..." />
-            <marker date="1518378773984" expanded="true" signature="12280:12299" ph="..." />
-            <marker date="1518378773984" expanded="true" signature="14446:14476" ph="..." />
-            <marker date="1518378773984" expanded="true" signature="14520:14529" ph="..." />
-          </folding>
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js">
+    <entry file="file://$PROJECT_DIR$/imports/api/documents/methods.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="208" column="28" lean-forward="true" selection-start-line="208" selection-start-column="28" selection-end-line="208" selection-end-column="28" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#29#55#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="368">
+          <caret line="114" column="0" lean-forward="true" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

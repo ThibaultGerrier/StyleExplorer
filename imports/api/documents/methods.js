@@ -70,6 +70,10 @@ function hashCode(str) {
   return hash;
 }
 
+function isWindows() {
+  return process.platform === 'win32';
+}
+
 function javaDone(_id, hash) {
   // console.log('java is done');
   Meteor.bindEnvironment(Meteor._sleepForMs(1000));
@@ -104,9 +108,13 @@ if (Meteor.isServer) {
 
       fs.writeFileSync(`${Meteor.absolutePath}/texts/text_${_id}${hash}.txt`, cleanText);
 
-      const runArgs = `java -jar ${config.jarLocation} ${_id}${hash} ${thirdArg} ${features}`;
+      let runArgs = `-jar ${config.jarLocation} ${_id}${hash} ${thirdArg} ${features}`;
+      if (isWindows()) {
+        runArgs = `java ${runArgs}`;
+      }
+
       console.log(runArgs);
-      const cmd = spawn('cmd', ['/c', runArgs]);
+      const cmd = isWindows() ? spawn('cmd', ['/c', runArgs]) : spawn('java', [runArgs]);
       console.log('started with ', _id);
       cmd.stdout.on(
         'data',
