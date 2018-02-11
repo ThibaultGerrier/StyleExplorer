@@ -181,7 +181,6 @@ export default class Chart {
     let boxValues;
     Object.values(this.data).forEach((doc, i) => {
       const { data } = doc;
-      // console.log(data);
 
       boxValues = getBoxValues(data, i, this.colors[doc.id].color, doc);
       boxData.push(boxValues.values);
@@ -421,32 +420,28 @@ export default class Chart {
     if (seriesOutliers && seriesOutliers.color) {
       seriesOutliers.update({ color });
     }
-    // } else {
-    //   console.log('else');
-    //   console.log(docId, this.type);
-    // this.chart.series.forEach((s) => {
-    //   const { data } = s;
-    //   data.forEach((d, i) => {
-    //     console.log(d);
-    //     data[i].color = color;
-    //     if (data[i].fillColor) {
-    //       data[i].fillColor = color;
-    //     }
-    //   });
-    //   series.update(({ data }));
-    // });
-    // }
-    // this.colors[docId].color = color;
-    // this.options.series.forEach((s, i) => {
-    //   if (s.id === docId) {
-    //     this.options.series[i].color = color;
-    //   }
-    // });
+    this.colors[docId].color = color;
   }
 
   switchSize() {
     this.isBig = !this.isBig;
     this.updateLabelLegend();
+  }
+
+  resetChart() {
+    switch (this.type) {
+      case 'line':
+        this.lineChart();
+        break;
+      case 'boxplot':
+        this.boxplot();
+        break;
+      case 'column':
+        this.columnChart();
+        break;
+      default:
+        console.log('Unknown chart type', this.type);
+    }
   }
 
   create() {

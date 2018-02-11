@@ -126,7 +126,7 @@ export default class CompareDocumentsNew extends React.Component {
         let { featuresList } = this.state;
         featuresList = updateToFirstPlace(featuresList, bigIds);
         this.setState({ featuresList });
-        chart.create();
+        chart.resetChart();
       };
 
       const config = {
@@ -252,12 +252,14 @@ export default class CompareDocumentsNew extends React.Component {
              <Panel id="collapsible-panel-example-2" key={`panel_${k}`} defaultExpanded={!this.state.distinctFeatures[k].collapsed}
                style={{ border: 'none' }}>
                <Panel.Heading style={{ backgroundColor: 'white', border: 'none' }}>
-                 <Panel.Title toggle onClick={() => { this.changePanel(k); }}>
-                   <h3 style={{ display: 'inline-block' }}>{v.titleEn}</h3>
+                 <Panel.Title toggle>
+                   <h3 style={{ display: 'inline-block' }} onClick={() => { this.changePanel(k); }}>{v.titleEn}</h3>
                    <Glyphicon glyph={this.state.distinctFeatures[k].glyph}
                       style={{
                         fontSize: '1.2em', cursor: 'pointer', marginLeft: '10px',
-                      }}/>
+                      }}
+                      onClick={() => { this.changePanel(k); }}
+                   />
                  </Panel.Title>
                </Panel.Heading>
                <Panel.Collapse>
