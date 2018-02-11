@@ -12,6 +12,7 @@
       <w>signup</w>
       <w>textresult</w>
       <w>upsert</w>
+      <w>wordcloud</w>
     </words>
   </dictionary>
 </component>

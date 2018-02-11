@@ -1,7 +1,31 @@
+/* eslint-disable max-len */
+import { Bert } from 'meteor/themeteorchef:bert';
+
 const Highcharts = require('highcharts');
 require('highcharts/modules/exporting')(Highcharts);
+require('highcharts/modules/wordcloud')(Highcharts);
 require('highcharts/modules/series-label')(Highcharts);
 require('highcharts/highcharts-more')(Highcharts);
+
+const sum = arr => arr.reduce((acc, cur) => acc + cur, 0);
+const avg = arr => sum(arr) / arr.length;
+const getAverages = (obj) => {
+  const ret = {};
+  Object.entries(obj).forEach(([k, v]) => {
+    ret[k] = avg(v);
+  });
+  return ret;
+};
+const sortAndSlice = (a, sliceCount) =>
+  Object.entries(a)
+    .sort(([, av], [, bv]) => bv - av)
+    .slice(0, sliceCount)
+    .reduce((o, [k, v]) => {
+      const i = {};
+      i[k] = v;
+      o.push(i);
+      return o;
+    }, []);
 
 export default class Chart {
   constructor(config) {
@@ -23,24 +47,11 @@ export default class Chart {
     this.maxNGram = Number(config.maxNGram);
     this.minNGram = Number(config.curNGram);
     this.isGroupedNGram = config.isGroupedNGram;
-    // console.log(this.data);
-    // console.log(this.nGrams);
-  }
-
-  updateChart() {
-    switch (this.type) {
-      case 'line':
-        this.lineChart();
-        break;
-      case 'boxplot':
-        this.boxplot();
-        break;
-      case 'column':
-        this.columnChart();
-        break;
-      default:
-        console.log('Unknown chart type', this.type);
-    }
+    this.curDocIndex = 0;
+    [this.curDocId] = Object.keys(config.data);
+    this.docCound = Object.keys(config.data).length;
+    this.wordCloudMaxEntries = 50;
+    this.pieChartMaxEntries = 50;
   }
 
   setData() {
@@ -59,9 +70,9 @@ export default class Chart {
         if (this.curNGram < this.maxNGram) {
           this.curNGram += 1;
           this.setData();
-          this.updateChart();
+          this.resetChart();
         } else {
-          alert('Cannot go further up');
+          Bert.alert('Cannot go further up', 'warning');
         }
       },
     };
@@ -71,9 +82,9 @@ export default class Chart {
         if (this.curNGram > this.minNGram) {
           this.curNGram -= 1;
           this.setData();
-          this.updateChart();
+          this.resetChart();
         } else {
-          alert('Cannot go further down');
+          Bert.alert('Cannot go further down', 'warning');
         }
       },
     };
@@ -81,33 +92,51 @@ export default class Chart {
       text: 'Without white space',
       onclick: () => {
         this.curWithWhiteSpace = !this.curWithWhiteSpace;
-        this.updateChart();
+        this.resetChart();
       },
     };
     const addWhiteSpace = {
       text: 'With white space',
       onclick: () => {
         this.curWithWhiteSpace = !this.curWithWhiteSpace;
-        this.updateChart();
+        this.resetChart();
       },
     };
     const toBoxPlot = {
       text: 'To a Boxplot',
       onclick: () => {
-        this.boxplot();
+        this.resetChart('boxplot');
       },
     };
     const toLineChart = {
-      text: 'To a Line-chart',
+      text: 'To a line chart',
       onclick: () => {
-        this.lineChart();
+        this.resetChart('line');
+      },
+    };
+    const toColumnChart = {
+      text: 'To a column chart',
+      onclick: () => {
+        this.resetChart('column');
+      },
+    };
+    const toWordCloud = {
+      text: 'To a word cloud',
+      onclick: () => {
+        this.resetChart('wordcloud');
+      },
+    };
+    const toPieChart = {
+      text: 'To a pie chart',
+      onclick: () => {
+        this.resetChart('pie');
       },
     };
     const extraCombi = {
       text: 'Add combination',
       onclick: () => {
         this.wordCount += 1;
-        this.columnChart();
+        this.resetChart();
       },
     };
     const removeCombi = {
@@ -115,12 +144,37 @@ export default class Chart {
       onclick: () => {
         if (this.wordCount > 1) {
           this.wordCount -= 1;
-          this.columnChart();
+          this.resetChart();
         } else {
-          alert('Cannot remove more combinations');
+          Bert.alert('Cannot remove more combinations', 'warning');
         }
       },
     };
+    const nextDocument = {
+      text: 'Next document',
+      onclick: () => {
+        if (this.curDocIndex < this.docCound - 1) {
+          this.curDocIndex += 1;
+        } else {
+          this.curDocIndex = 0;
+        }
+        this.curDocId = Object.values(this.data)[this.curDocIndex].id;
+        this.resetChart();
+      },
+    };
+    const previousDocument = {
+      text: 'Previous document',
+      onclick: () => {
+        if (this.curDocIndex > 0) {
+          this.curDocIndex -= 1;
+        } else {
+          this.curDocIndex = this.docCound - 1;
+        }
+        this.curDocId = Object.values(this.data)[this.curDocIndex].id;
+        this.resetChart();
+      },
+    };
+
     const buttons = ['separator', 'downloadJPEG', 'downloadPDF'];
 
     switch (this.type) {
@@ -133,29 +187,69 @@ export default class Chart {
       case 'column':
         buttons.unshift(removeCombi);
         buttons.unshift(extraCombi);
+        buttons.unshift('separator');
         if (this.withWhiteSpace) {
-          buttons.unshift('separator');
           if (this.curWithWhiteSpace) {
             buttons.unshift(removeWhiteSpace);
           } else {
             buttons.unshift(addWhiteSpace);
           }
+          buttons.unshift('separator');
         }
         if (this.isGroupedNGram) {
-          buttons.unshift('separator');
           buttons.unshift(previousNGram);
           buttons.unshift(nextNGram);
+          buttons.unshift('separator');
         }
+        buttons.unshift(toWordCloud);
+        buttons.unshift(toPieChart);
+        break;
+      case 'wordcloud':
+        buttons.unshift(previousDocument);
+        buttons.unshift(nextDocument);
+        buttons.unshift('separator');
+        if (this.withWhiteSpace) {
+          if (this.curWithWhiteSpace) {
+            buttons.unshift(removeWhiteSpace);
+          } else {
+            buttons.unshift(addWhiteSpace);
+          }
+          buttons.unshift('separator');
+        }
+        if (this.isGroupedNGram) {
+          buttons.unshift(previousNGram);
+          buttons.unshift(nextNGram);
+          buttons.unshift('separator');
+        }
+        buttons.unshift(toColumnChart);
+        buttons.unshift(toPieChart);
+        break;
+      case 'pie':
+        buttons.unshift(previousDocument);
+        buttons.unshift(nextDocument);
+        buttons.unshift('separator');
+        if (this.withWhiteSpace) {
+          if (this.curWithWhiteSpace) {
+            buttons.unshift(removeWhiteSpace);
+          } else {
+            buttons.unshift(addWhiteSpace);
+          }
+          buttons.unshift('separator');
+        }
+        if (this.isGroupedNGram) {
+          buttons.unshift(previousNGram);
+          buttons.unshift(nextNGram);
+          buttons.unshift('separator');
+        }
+        buttons.unshift(toColumnChart);
+        buttons.unshift(toWordCloud);
         break;
       default:
         console.log('Unknown chart type', this.type);
     }
 
     const that = this;
-    return {
-      chart: {
-        type,
-      },
+    const options = {
       title: {
         text: this.title,
       },
@@ -184,21 +278,89 @@ export default class Chart {
         },
       },
     };
+    if (type) {
+      options.chart = {
+        type,
+      };
+    }
+    return options;
+  }
+
+  lineChart() {
+    this.type = 'line';
+    const series = [];
+    Object.values(this.data).forEach((doc) => {
+      const values = doc.data;
+      const mappedData = [];
+      values.forEach((p, i) => {
+        mappedData.push([(i / (values.length - 1)) * 100, p]);
+      });
+      series.push({
+        id: doc.id,
+        name: doc.name,
+        data: mappedData,
+        color: this.colors[doc.id].color,
+        label: {
+          enabled: false,
+        },
+      });
+    });
+
+    const options = this.getDefaultOptions('line');
+    options.legend = {
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'middle',
+      enabled: false,
+    };
+    options.xAxis = {
+      crosshair: true,
+    };
+    options.tooltip = {
+      headerFormat: '<span>{point.x:.3f}</span><table>',
+      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+      '<td style="padding:0"><b>{point.y:.3f}</b></td></tr>',
+      footerFormat: '</table>',
+      useHTML: true,
+    };
+    options.plotOptions = {
+      series: {
+        label: {
+          connectorAllowed: false,
+        },
+        pointStart: 0,
+      },
+    };
+    options.series = series;
+    options.responsive = {
+      rules: [{
+        condition: {
+          maxWidth: 500,
+        },
+        chartOptions: {
+          legend: {
+            layout: 'horizontal',
+            align: 'center',
+            verticalAlign: 'bottom',
+          },
+        },
+      }],
+    };
+    this.setOptions(options);
   }
 
   boxplot() {
     this.type = 'boxplot';
     const categories = Object.values(this.data).map(doc => doc.name);
     const outliers = [];
-    // const meanofValues = 10;
 
     function mean(data) {
       const len = data.length;
-      let sum = 0;
+      let s = 0;
       for (let i = 0; i < len; i += 1) {
-        sum += parseFloat(data[i]);
+        s += parseFloat(data[i]);
       }
-      return (sum / len);
+      return (s / len);
     }
 
     function numSort(a, b) {
@@ -309,11 +471,11 @@ export default class Chart {
       tooltip: {
         headerFormat: '',
         pointFormat: '<span style="color:{point.color}">●</span> <b> {point.key}</b><br/>' +
-          'Maximum: {point.high:.3f}<br/>' +
-          'Upper quartile: {point.q3:.3f}<br/>' +
-          'Median: {point.median:.3f}<br/>' +
-          'Lower quartile: {point.q1:.3f}<br/>' +
-          'Minimum: {point.low:.3f}<br/>',
+        'Maximum: {point.high:.3f}<br/>' +
+        'Upper quartile: {point.q3:.3f}<br/>' +
+        'Median: {point.median:.3f}<br/>' +
+        'Lower quartile: {point.q1:.3f}<br/>' +
+        'Minimum: {point.low:.3f}<br/>',
         footerFormat: '',
         useHTML: true,
         shared: true,
@@ -327,18 +489,6 @@ export default class Chart {
 
   columnChart() {
     this.type = 'column';
-    const sortAndSlice = (a, extra) =>
-      Object.entries(a)
-        .sort(([, av], [, bv]) => bv - av)
-        .slice(0, extra ? this.wordCount + extra : this.wordCount)
-        .reduce((o, [k, v]) => {
-          const i = {};
-          i[k] = v;
-          o.push(i);
-          return o;
-        }, []);
-    const sum = arr => arr.reduce((acc, cur) => acc + cur, 0);
-    const avg = arr => sum(arr) / arr.length;
 
     const occPerDoc = {};
     Object.values(this.data).forEach((doc) => {
@@ -348,7 +498,7 @@ export default class Chart {
           occ[key] = avg(value);
         }
       });
-      occPerDoc[doc.id] = sortAndSlice(occ, 5);
+      occPerDoc[doc.id] = sortAndSlice(occ, this.wordCount + 5);
     });
 
     let best = {};
@@ -362,7 +512,7 @@ export default class Chart {
         }
       });
     });
-    best = sortAndSlice(best);
+    best = sortAndSlice(best, this.wordCount);
     const categories = [];
     best.forEach((pair) => {
       categories.push(Object.keys(pair)[0]);
@@ -388,6 +538,15 @@ export default class Chart {
 
     const options = this.getDefaultOptions('column');
 
+    if (this.isGroupedNGram) {
+      options.subtitle = {
+        text: `N = ${this.curNGram}`,
+        style: {
+          fontSize: '1.2em',
+        },
+      };
+    }
+
     options.xAxis = {
       categories,
       crosshair: true,
@@ -399,7 +558,7 @@ export default class Chart {
     options.tooltip = {
       headerFormat: '<span>{point.key}</span><table>',
       pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-        '<td style="padding:0"><b>{point.y:.3f}</b></td></tr>',
+      '<td style="padding:0"><b>{point.y:.3f}</b></td></tr>',
       footerFormat: '</table>',
       useHTML: true,
       shared: true,
@@ -414,66 +573,81 @@ export default class Chart {
     this.setOptions(options);
   }
 
-  lineChart() {
-    this.type = 'line';
-    const series = [];
-    Object.values(this.data).forEach((doc) => {
-      const values = doc.data;
-      const mappedData = [];
-      values.forEach((p, i) => {
-        mappedData.push([(i / (values.length - 1)) * 100, p]);
-      });
-      series.push({
-        id: doc.id,
-        name: doc.name,
-        data: mappedData,
-        color: this.colors[doc.id].color,
-        label: {
-          enabled: false,
-        },
+  wordcloud() {
+    this.type = 'wordcloud';
+    const data = [];
+    sortAndSlice(getAverages(this.data[this.curDocId].data), this.wordCloudMaxEntries).forEach((entry) => {
+      const [key, value] = Object.entries(entry)[0];
+      data.push({
+        name: key,
+        weight: value,
       });
     });
-
-    const options = this.getDefaultOptions('line');
-    options.legend = {
-      layout: 'vertical',
-      align: 'right',
-      verticalAlign: 'middle',
-      enabled: false,
-    };
-    options.xAxis = {
-      crosshair: true,
-    };
-    options.tooltip = {
-      headerFormat: '<span>{point.x:.3f}</span><table>',
-      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-        '<td style="padding:0"><b>{point.y:.3f}</b></td></tr>',
-      footerFormat: '</table>',
-      useHTML: true,
-    };
-    options.plotOptions = {
-      series: {
-        label: {
-          connectorAllowed: false,
-        },
-        pointStart: 0,
+    const series = [{
+      type: 'wordcloud',
+      data,
+      name: 'Occurrences',
+    }];
+    const options = this.getDefaultOptions();
+    options.subtitle = {
+      text: this.data[this.curDocId].name,
+      style: {
+        color: this.colors[this.curDocId].color,
+        fontSize: '1.2em',
       },
     };
     options.series = series;
-    options.responsive = {
-      rules: [{
-        condition: {
-          maxWidth: 500,
-        },
-        chartOptions: {
-          legend: {
-            layout: 'horizontal',
-            align: 'center',
-            verticalAlign: 'bottom',
+    this.setOptions(options);
+  }
+
+  pieChart() {
+    this.type = 'pie';
+    const data = [];
+    sortAndSlice(getAverages(this.data[this.curDocId].data), this.pieChartMaxEntries).forEach((entry) => {
+      const [key, value] = Object.entries(entry)[0];
+      data.push({
+        name: key,
+        y: value,
+      });
+    });
+    const series = [{
+      name: this.data[this.curDocId].name,
+      colorByPoint: true,
+      data,
+    }];
+
+    const options = this.getDefaultOptions('pie');
+    options.tooltip = {
+      pointFormat: '{series.name}: <b>{point.percentage:.3f}%</b>',
+    };
+    options.subtitle = {
+      text: `Distribution for top ${this.pieChartMaxEntries}: ${this.data[this.curDocId].name}`,
+      style: {
+        color: this.colors[this.curDocId].color,
+        fontSize: '1.2em',
+      },
+    };
+    options.plotOptions = {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: false,
+          format: '<b>{point.name}</b>: {point.percentage:.3f} %',
+          style: {
+            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+          },
+          filter: {
+            property: 'percentage',
+            operator: '>',
+            value: 2,
           },
         },
-      }],
+      },
     };
+    // console.log(options);
+    // console.log(JSON.stringify(options));
+    options.series = series;
     this.setOptions(options);
   }
 
@@ -498,6 +672,9 @@ export default class Chart {
       this.chart.update({ legend: { enabled: this.isBig } });
       this.options.legend.enabled = this.isBig;
     }
+    if (this.type === 'pie') {
+      this.chart.update({ plotOptions: { pie: { dataLabels: { enabled: this.isBig } } } });
+    }
   }
 
   setColor(docId, color) {
@@ -509,6 +686,9 @@ export default class Chart {
     if (seriesOutliers && seriesOutliers.color) {
       seriesOutliers.update({ color });
     }
+    if (this.chart.subtitle.textStr) {
+      this.chart.subtitle.update({ style: { color } });
+    }
     this.colors[docId].color = color;
   }
 
@@ -517,8 +697,8 @@ export default class Chart {
     this.updateLabelLegend();
   }
 
-  resetChart() {
-    switch (this.type) {
+  resetChart(type) {
+    switch (type || this.type) {
       case 'line':
         this.lineChart();
         break;
@@ -527,6 +707,12 @@ export default class Chart {
         break;
       case 'column':
         this.columnChart();
+        break;
+      case 'wordcloud':
+        this.wordcloud();
+        break;
+      case 'pie':
+        this.pieChart();
         break;
       default:
         console.log('Unknown chart type', this.type);

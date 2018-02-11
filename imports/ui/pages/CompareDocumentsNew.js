@@ -196,7 +196,7 @@ export default class CompareDocumentsNew extends React.Component {
         nGrams,
         curNGram: this.state.lowestNGram[f],
         maxNGram: this.state.maxNGram[f],
-        isGroupedNGram: this.state.settings.groupNGrams,
+        isGroupedNGram: this.state.settings.groupNGrams && isNGramFeature(featureId),
         colors: this.state.colors,
         withWhiteSpace: isWhiteSpaceFeature(featureId),
       };
@@ -207,6 +207,8 @@ export default class CompareDocumentsNew extends React.Component {
         // chart.boxplot();
       } else {
         chart.columnChart();
+        // chart.pieChart();
+        // chart.wordcloud();
       }
       chart.create();
       charts.push(chart);

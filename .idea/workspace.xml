@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="037d7edd-422f-47f6-a68a-4ce539764e78" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/thibault.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/thibault.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/imports/modules/chartsObj.js" afterPath="$PROJECT_DIR$/imports/modules/chartsObj.js" />
-      <change beforePath="$PROJECT_DIR$/imports/modules/featuresClean.js" afterPath="$PROJECT_DIR$/imports/modules/featuresClean.js" />
       <change beforePath="$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js" afterPath="$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -26,11 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CompareDocumentsNew.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CompareDocumentsNew.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1265">
-              <caret line="194" column="13" lean-forward="false" selection-start-line="194" selection-start-column="13" selection-end-line="194" selection-end-column="13" />
+            <state relative-caret-position="259">
+              <caret line="208" column="28" lean-forward="true" selection-start-line="208" selection-start-column="28" selection-end-line="208" selection-end-column="28" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#29#55#0" expanded="true" />
@@ -39,17 +39,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="chartsObj.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="chartsObj.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/imports/modules/chartsObj.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="236">
-              <caret line="136" column="39" lean-forward="false" selection-start-line="136" selection-start-column="39" selection-end-line="136" selection-end-column="39" />
+            <state relative-caret-position="187">
+              <caret line="642" column="20" lean-forward="false" selection-start-line="642" selection-start-column="20" selection-end-line="642" selection-end-column="20" />
               <folding>
-                <element signature="e#4792#8247#0" expanded="false" />
-                <element signature="e#8265#10541#0" expanded="false" />
-                <element signature="e#10557#12049#0" expanded="false" />
-                <marker date="1518351964194" expanded="true" signature="10168:10198" ph="..." />
-                <marker date="1518351964194" expanded="true" signature="10244:10253" ph="..." />
+                <element signature="n#!!doc" expanded="true" />
+                <element signature="e#7828#9318#0" expanded="false" />
+                <element signature="e#9332#12739#0" expanded="false" />
+                <element signature="e#12757#14817#0" expanded="false" />
+                <element signature="e#14833#15501#0" expanded="false" />
+                <marker date="1518378773984" expanded="true" signature="8647:8677" ph="..." />
+                <marker date="1518378773984" expanded="true" signature="8721:8730" ph="..." />
+                <marker date="1518378773984" expanded="true" signature="12280:12299" ph="..." />
+                <marker date="1518378773984" expanded="true" signature="14446:14476" ph="..." />
+                <marker date="1518378773984" expanded="true" signature="14520:14529" ph="..." />
               </folding>
             </state>
           </provider>
@@ -58,18 +63,8 @@
       <file leaf-file-name="featuresClean.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/imports/modules/featuresClean.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4991">
-              <caret line="265" column="20" lean-forward="false" selection-start-line="265" selection-start-column="2" selection-end-line="265" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="featureData.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/misc/featureData.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1105633">
-              <caret line="48107" column="6" lean-forward="false" selection-start-line="48107" selection-start-column="6" selection-end-line="48107" selection-end-column="7" />
+            <state relative-caret-position="184">
+              <caret line="8" column="2" lean-forward="false" selection-start-line="8" selection-start-column="2" selection-end-line="8" selection-end-column="2" />
               <folding />
             </state>
           </provider>
@@ -86,14 +81,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>max-</find>
-      <find>key=</find>
-      <find>Meteor server restarted</find>
-      <find>onZoo</find>
-      <find>x</find>
-      <find>log</find>
-      <find>conso</find>
-      <find>boxchar</find>
       <find>boxchart</find>
       <find>seriesla</find>
       <find>this.state.charts.</find>
@@ -116,6 +103,14 @@
       <find>setItem</find>
       <find>lowestNGram</find>
       <find>isNGramFeature</find>
+      <find>words</find>
+      <find>nbsp</find>
+      <find>wordc</find>
+      <find>bert</find>
+      <find>alert</find>
+      <find>em</find>
+      <find>update</find>
+      <find>esli</find>
     </findStrings>
     <replaceStrings>
       <replace>identifier</replace>
@@ -179,8 +174,8 @@
         <option value="$PROJECT_DIR$/imports/ui/layouts/App.js" />
         <option value="$PROJECT_DIR$/imports/ui/pages/ViewDocument.js" />
         <option value="$PROJECT_DIR$/imports/modules/featuresClean.js" />
-        <option value="$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js" />
         <option value="$PROJECT_DIR$/imports/modules/chartsObj.js" />
+        <option value="$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js" />
       </list>
     </option>
   </component>
@@ -260,6 +255,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -313,7 +309,6 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -400,12 +395,13 @@
       <workItem from="1518264505806" duration="8671000" />
       <workItem from="1518280513631" duration="18676000" />
       <workItem from="1518300832195" duration="1000" />
-      <workItem from="1518335315036" duration="11993000" />
+      <workItem from="1518335315036" duration="12075000" />
+      <workItem from="1518365340581" duration="10185000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="136362000" />
+    <option name="totallyTimeSpent" value="146629000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -415,7 +411,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3281768" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1359116" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928178" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15724947" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -805,41 +801,46 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/misc/featureData.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1105633">
+        <state relative-caret-position="1106461">
           <caret line="48107" column="6" lean-forward="false" selection-start-line="48107" selection-start-column="6" selection-end-line="48107" selection-end-column="7" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1265">
-          <caret line="194" column="13" lean-forward="false" selection-start-line="194" selection-start-column="13" selection-end-line="194" selection-end-column="13" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#29#55#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/imports/modules/featuresClean.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4991">
-          <caret line="265" column="20" lean-forward="false" selection-start-line="265" selection-start-column="2" selection-end-line="265" selection-end-column="20" />
+        <state relative-caret-position="184">
+          <caret line="8" column="2" lean-forward="false" selection-start-line="8" selection-start-column="2" selection-end-line="8" selection-end-column="2" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/imports/modules/chartsObj.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
-          <caret line="136" column="39" lean-forward="false" selection-start-line="136" selection-start-column="39" selection-end-line="136" selection-end-column="39" />
+        <state relative-caret-position="187">
+          <caret line="642" column="20" lean-forward="false" selection-start-line="642" selection-start-column="20" selection-end-line="642" selection-end-column="20" />
           <folding>
-            <element signature="e#4792#8247#0" expanded="false" />
-            <element signature="e#8265#10541#0" expanded="false" />
-            <element signature="e#10557#12049#0" expanded="false" />
-            <marker date="1518351964194" expanded="true" signature="10168:10198" ph="..." />
-            <marker date="1518351964194" expanded="true" signature="10244:10253" ph="..." />
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#7828#9318#0" expanded="false" />
+            <element signature="e#9332#12739#0" expanded="false" />
+            <element signature="e#12757#14817#0" expanded="false" />
+            <element signature="e#14833#15501#0" expanded="false" />
+            <marker date="1518378773984" expanded="true" signature="8647:8677" ph="..." />
+            <marker date="1518378773984" expanded="true" signature="8721:8730" ph="..." />
+            <marker date="1518378773984" expanded="true" signature="12280:12299" ph="..." />
+            <marker date="1518378773984" expanded="true" signature="14446:14476" ph="..." />
+            <marker date="1518378773984" expanded="true" signature="14520:14529" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imports/ui/pages/CompareDocumentsNew.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="208" column="28" lean-forward="true" selection-start-line="208" selection-start-column="28" selection-end-line="208" selection-end-column="28" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#29#55#0" expanded="true" />
           </folding>
         </state>
       </provider>
