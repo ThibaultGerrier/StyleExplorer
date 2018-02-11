@@ -1,3 +1,13 @@
+const nGramFeatures = [
+  'charsNGrams',
+  'wordNGrams',
+  'nGramOfTags',
+];
+
+const whiteSpaceFeatures = [
+  'charsNGrams',
+];
+
 const types = {
   lexicalFeatures: {
     nameEn: 'All lexical features',
@@ -252,4 +262,6 @@ const features = {
 export {
   features,
   types,
+  nGramFeatures,
+  whiteSpaceFeatures,
 };

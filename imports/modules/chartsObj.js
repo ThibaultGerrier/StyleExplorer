@@ -6,6 +6,7 @@ require('highcharts/highcharts-more')(Highcharts);
 export default class Chart {
   constructor(config) {
     this.htmlId = config.htmlId;
+    this.featureId = config.featureId;
     this.title = config.title;
     this.dimension = config.dimension;
     this.data = config.data;
@@ -14,9 +15,82 @@ export default class Chart {
     this.isBig = false;
     this.wordCount = 7;
     this.colors = config.colors;
+    this.withWhiteSpace = config.withWhiteSpace;
+    this.curWithWhiteSpace = true;
+    this.nGrams = config.nGrams;
+    // {123: {id:123, name:hello, data:{ 2:{ab:[],...}, 3: {abc:[],...} },
+    this.curNGram = Number(config.curNGram);
+    this.maxNGram = Number(config.maxNGram);
+    this.minNGram = Number(config.curNGram);
+    this.isGroupedNGram = config.isGroupedNGram;
+    // console.log(this.data);
+    // console.log(this.nGrams);
+  }
+
+  updateChart() {
+    switch (this.type) {
+      case 'line':
+        this.lineChart();
+        break;
+      case 'boxplot':
+        this.boxplot();
+        break;
+      case 'column':
+        this.columnChart();
+        break;
+      default:
+        console.log('Unknown chart type', this.type);
+    }
+  }
+
+  setData() {
+    const data = {};
+    Object.entries(this.data).forEach(([k, v]) => {
+      data[k] = v;
+      data[k].data = this.nGrams[k].data[this.curNGram.toString()];
+    });
+    this.data = data;
   }
 
   getDefaultOptions(type) {
+    const nextNGram = {
+      text: 'Increase N',
+      onclick: () => {
+        if (this.curNGram < this.maxNGram) {
+          this.curNGram += 1;
+          this.setData();
+          this.updateChart();
+        } else {
+          alert('Cannot go further up');
+        }
+      },
+    };
+    const previousNGram = {
+      text: 'Decrease N',
+      onclick: () => {
+        if (this.curNGram > this.minNGram) {
+          this.curNGram -= 1;
+          this.setData();
+          this.updateChart();
+        } else {
+          alert('Cannot go further down');
+        }
+      },
+    };
+    const removeWhiteSpace = {
+      text: 'Without white space',
+      onclick: () => {
+        this.curWithWhiteSpace = !this.curWithWhiteSpace;
+        this.updateChart();
+      },
+    };
+    const addWhiteSpace = {
+      text: 'With white space',
+      onclick: () => {
+        this.curWithWhiteSpace = !this.curWithWhiteSpace;
+        this.updateChart();
+      },
+    };
     const toBoxPlot = {
       text: 'To a Boxplot',
       onclick: () => {
@@ -59,6 +133,19 @@ export default class Chart {
       case 'column':
         buttons.unshift(removeCombi);
         buttons.unshift(extraCombi);
+        if (this.withWhiteSpace) {
+          buttons.unshift('separator');
+          if (this.curWithWhiteSpace) {
+            buttons.unshift(removeWhiteSpace);
+          } else {
+            buttons.unshift(addWhiteSpace);
+          }
+        }
+        if (this.isGroupedNGram) {
+          buttons.unshift('separator');
+          buttons.unshift(previousNGram);
+          buttons.unshift(nextNGram);
+        }
         break;
       default:
         console.log('Unknown chart type', this.type);
@@ -257,7 +344,9 @@ export default class Chart {
     Object.values(this.data).forEach((doc) => {
       const occ = {};
       Object.entries(doc.data).forEach(([key, value]) => {
-        occ[key] = avg(value);
+        if (this.curWithWhiteSpace || !key.includes(' ')) {
+          occ[key] = avg(value);
+        }
       });
       occPerDoc[doc.id] = sortAndSlice(occ, 5);
     });
