@@ -5,6 +5,7 @@ import { _ } from 'meteor/underscore';
 import { upsertDocument } from '../api/documents/methods.js';
 import './validation.js';
 import features from './features.js';
+import validate from './uploadValidation';
 
 let component;
 
@@ -50,11 +51,22 @@ const handleUpsert = () => {
       thirdArg = `n_exact=${document.querySelector('[name=exactInput]').value.split(' ').join('.')}`;
     }
 
+    const paragraphOptions = {
+      numEmptyLines: {
+        checked: document.querySelector('[id=emptyLines]').checked,
+        value: document.querySelector('[name=emptyLinesInput]').value,
+      },
+      specCharSeq: {
+        checked: document.querySelector('[id=charSeq]').checked,
+        value: document.querySelector('[name=charSeqInput]').value,
+      },
+    };
+
     upsertDocument.call(upsert, (error, response) => {
       if (error) {
         Bert.alert(error.reason, 'danger');
       } else {
-        Meteor.call('runJava', response.insertedId, upsert.body, featureStr, thirdArg);
+        Meteor.call('runJava', response.insertedId, upsert.body, featureStr, thirdArg, paragraphOptions);
       }
     });
   });
@@ -63,57 +75,7 @@ const handleUpsert = () => {
   component.props.history.push('/documents');
 };
 
-function isInt(value) {
-  // eslint-disable-next-line no-bitwise
-  return !Number.isNaN(value) && ((x => (x | 0) === x)(parseFloat(value)));
-}
-
-const validate = () => {
-  jQuery.validator.addMethod(
-    'isIntValidate', function (value, element) {
-      return this.optional(element) || isInt(value);
-    }
-    , "Must be one integer between 2 and 5. (eg. '2 3 4')",
-  );
-
-  jQuery.validator.addMethod('isArrayOfInts', function (value, element) {
-    const arr = value.split(' ');
-    let b = true;
-    for (let i = 0; i < arr.length; i += 1) {
-      b = b && isInt(arr[i]);
-      if (arr[i] < 2 || arr[i] > 5) {
-        b = false;
-      }
-    }
-    return this.optional(element) || b;
-  }, "Must be one or more integer between 2 and 5. (eg. '2 3 4')");
-
-  $(component.documentEditorForm).validate({
-    rules: {
-      maxInput: {
-        required: '#maxRadio:checked',
-        isIntValidate: true,
-        range: [2, 5],
-      },
-      exactInput: {
-        required: '#exactRadio:checked',
-        isArrayOfInts: true,
-      },
-    },
-    messages: {
-      maxInput: {
-        required: 'If you want to use max please enter a number between 2 and 5',
-      },
-      exactInput: {
-        required: 'If you want to use exact please enter numbers between 2 and 5',
-      },
-    },
-    submitHandler() { handleUpsert(); },
-  });
-};
-
-
 export default function uploadMultiple(data) {
   ({ component } = data);
-  validate();
+  validate(component, handleUpsert);
 }

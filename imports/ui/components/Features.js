@@ -1,12 +1,10 @@
-/**
- * Created by thibault on 19/04/2017.
- */
+/* eslint-disable max-len */
 
 import React from 'react';
-import { FormControl, Row, Col } from 'react-bootstrap';
+import { FormControl, Row, Col, Checkbox } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-import Checkbox from './Checkbox';
+import MyCheckbox from './Checkbox';
 import features from '../../modules/features.js';
 
 
@@ -17,6 +15,14 @@ export default class Features extends React.Component {
       selectedOption: 'max',
       featureData: props.featureData,
       selectedCheckboxes: new Set(),
+      emptyLines: {
+        enabled: true,
+        value: 2,
+      },
+      charSeq: {
+        enabled: true,
+        value: '$new_par$',
+      },
     };
   }
 
@@ -41,7 +47,7 @@ export default class Features extends React.Component {
       });
     }
     return (
-      <Checkbox
+      <MyCheckbox
         label={label}
         handleCheckboxChange={() => this.toggleCheckbox}
         key={label}
@@ -75,41 +81,73 @@ export default class Features extends React.Component {
           </div>
         </div>
 
-        <h4> Choose n for the n-grams </h4>
         <Row>
-          <Col xs={ 4 } sm={ 2 } md={ 2 } style={{ width: '12%' }}>
-            <input
-              type="radio"
-              value="maxRadio"
-              name="radio_option"
-              id="maxRadio"
-              checked={this.state.selectedOption === 'max'}
-              onChange={() => this.setState({ selectedOption: 'max' })}
-            />
-            &nbsp;Maximum:
+          <Col xs={ 12 } sm={ 12 } md={ 6 } lg={6}>
+            <h4> Choose n for the n-grams </h4>
+            <Row>
+              <Col xs={ 4 } sm={ 4 } md={ 3 } lg={ 3 } >
+                <input
+                  type="radio"
+                  value="maxRadio"
+                  name="radio_option"
+                  id="maxRadio"
+                  checked={this.state.selectedOption === 'max'}
+                  onChange={() => this.setState({ selectedOption: 'max' })}
+                />
+                &nbsp;Maximum:
+              </Col>
+              <Col xs={ 4 } sm={ 4 } md={ 4 } lg={ 4 }>
+                <FormControl type="text" name="maxInput" defaultValue="3"
+                             onClick={() => this.setState({ selectedOption: 'max' })}/>
+              </Col>
+            </Row>
+            <br/>
+            <Row>
+              <Col xs={ 4 } sm={ 4 } md={ 3 } lg={ 3 }>
+                <input
+                  type="radio"
+                  value="exactRadio"
+                  name="radio_option"
+                  id="exactRadio"
+                  checked={this.state.selectedOption === 'exact'}
+                  onChange={() => this.setState({ selectedOption: 'exact' })}
+                />
+                &nbsp;Exactly:
+              </Col>
+              <Col xs={ 4 } sm={ 4 } md={ 4 } lg={ 4 }>
+                <FormControl type="text" name="exactInput" onClick={() => this.setState({ selectedOption: 'exact' })}/>
+              </Col>
+            </Row>
           </Col>
-          <Col xs={ 4 } sm={ 2 } md={ 2 }>
-            <FormControl type="text" name="maxInput" defaultValue="3"
-                         onClick={() => this.setState({ selectedOption: 'max' })}/>
+          <Col xs={ 12 } sm={ 12 } md={ 6 } lg={6} >
+            <h4>Paragraphs</h4>
+            <Row>
+              <Col xs={ 6 } sm={ 6 } md={ 4 } lg={ 4 }>
+                <Checkbox id="emptyLines" checked={this.state.emptyLines.enabled}
+                          onChange={e => this.setState({ emptyLines: { enabled: e.target.checked, value: this.state.emptyLines.value } }) }>
+                  Number of empty lines:
+                </Checkbox>
+              </Col>
+              <Col xs={ 4 } sm={ 4 } md={ 4 } lg={ 4 }>
+                <FormControl type="text" name="emptyLinesInput" value={this.state.emptyLines.value} onChange={e => this.setState({ emptyLines: { value: e.target.value, enabled: this.state.emptyLines.enabled } })}>
+                </FormControl>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={ 6 } sm={ 6 } md={ 4 } lg={ 4 }>
+                <Checkbox id="charSeq" checked={this.state.charSeq.enabled}
+                          onChange={e => this.setState({ charSeq: { enabled: e.target.checked, value: this.state.charSeq.value } }) }>
+                  Special character sequence:
+                </Checkbox>
+              </Col>
+              <Col xs={ 4 } sm={ 4 } md={ 4 } lg={ 4 }>
+                <FormControl type="text" name="charSeqInput" value={this.state.charSeq.value} onChange={e => this.setState({ charSeq: { value: e.target.value, enabled: this.state.charSeq.enabled } })}>
+                </FormControl>
+              </Col>
+            </Row>
           </Col>
         </Row>
-        <br/>
-        <Row>
-          <Col xs={ 4 } sm={ 2 } md={ 2 } style={{ width: '12%' }}>
-            <input
-              type="radio"
-              value="exactRadio"
-              name="radio_option"
-              id="exactRadio"
-              checked={this.state.selectedOption === 'exact'}
-              onChange={() => this.setState({ selectedOption: 'exact' })}
-            />
-            &nbsp;Exactly:
-          </Col>
-          <Col xs={ 4 } sm={ 2 } md={ 2 }>
-            <FormControl type="text" name="exactInput" onClick={() => this.setState({ selectedOption: 'exact' })}/>
-          </Col>
-        </Row>
+
       </div>
     );
   }

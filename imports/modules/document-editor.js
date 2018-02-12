@@ -4,6 +4,7 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import { upsertDocument } from '../api/documents/methods.js';
 import './validation.js';
 import features from './features.js';
+import validate from './uploadValidation';
 
 let component;
 
@@ -48,6 +49,17 @@ const handleUpsert = () => {
     thirdArg = `n_exact=${document.querySelector('[name=exactInput]').value.split(' ').join('.')}`; // '2 5 3' -> 2.5.3
   }
 
+  const paragraphOptions = {
+    numEmptyLines: {
+      checked: document.querySelector('[id=emptyLines]').checked,
+      value: document.querySelector('[name=emptyLinesInput]').value,
+    },
+    specCharSeq: {
+      checked: document.querySelector('[id=charSeq]').checked,
+      value: document.querySelector('[name=charSeqInput]').value,
+    },
+  };
+
   if (doc && doc._id) upsert._id = doc._id;
   upsertDocument.call(upsert, (error, response) => {
     if (error) {
@@ -57,73 +69,12 @@ const handleUpsert = () => {
       Bert.alert(confirmation, 'success');
       component.props.history.push(`/documents/${response.insertedId || doc._id}`);
 
-      Meteor.call('runJava', response.insertedId || doc._id, upsert.body, featureStr, thirdArg);
+      Meteor.call('runJava', response.insertedId || doc._id, upsert.body, featureStr, thirdArg, paragraphOptions);
     }
-  });
-};
-
-function isInt(value) {
-  // eslint-disable-next-line no-bitwise
-  return !Number.isNaN(value) && ((x => (x | 0) === x)(parseFloat(value)));
-}
-
-// do not change functions to arrow functions as the "this" context will get lost
-const validate = () => {
-  jQuery.validator.addMethod(
-    'isIntValidate', function (value, element) {
-      return this.optional(element) || isInt(value);
-    }
-    , "Must be one integer between 2 and 5. (eg. '2 3 4')",
-  );
-
-  jQuery.validator.addMethod('isArrayOfInts', function (value, element) {
-    const arr = value.split(' ');
-    let b = true;
-    for (let i = 0; i < arr.length; i += 1) {
-      b = b && isInt(arr[i]);
-      if (arr[i] < 2 || arr[i] > 5) {
-        b = false;
-      }
-    }
-    return this.optional(element) || b;
-  }, "Must be one ore more integer between 2 and 5. (eg. '2 3 4')");
-
-  $(component.documentEditorForm).validate({
-    rules: {
-      title: {
-        required: true,
-      },
-      body: {
-        required: true,
-      },
-      maxInput: {
-        required: '#maxRadio:checked',
-        range: [2, 5],
-      },
-      exactInput: {
-        required: '#exactRadio:checked',
-        isArrayOfInts: true,
-      },
-    },
-    messages: {
-      title: {
-        required: 'A title is neeced in here.',
-      },
-      body: {
-        required: 'This neeeds some text.',
-      },
-      maxInput: {
-        required: 'If you want to use max please enter a number between 2 and 5',
-      },
-      exactInput: {
-        required: 'If you want to use exact please enter numbers between 2 and 5',
-      },
-    },
-    submitHandler() { handleUpsert(); },
   });
 };
 
 export default function documentEditor(options) {
   ({ component } = options);
-  validate();
+  validate(component, handleUpsert);
 }

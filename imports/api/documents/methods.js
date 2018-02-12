@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
@@ -70,6 +71,11 @@ function hashCode(str) {
   return hash;
 }
 
+function escapeRegExp(str) {
+  // eslint-disable-next-line no-useless-escape
+  return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
+}
+
 function spawnWindowsProcess(dir, cmd) {
   return spawn('cmd.exe', ['/c', cmd], { cwd: dir });
 }
@@ -106,15 +112,29 @@ function javaDone(_id, hash) {
 
 if (Meteor.isServer) {
   Meteor.methods({
-    runJava(_id, text, features, thirdArg) {
+    runJava(_id, text, features, thirdArg, paragraphOptions) {
       check(_id, String);
       check(text, String);
       check(features, String);
       check(thirdArg, String);
+      check(paragraphOptions, Object);
 
-      let cleanText = text.replace(/[\n]{3}/g, '$par$').replace(/\s+/g, ' ').trim(); // 3 should probably be a parameter
       // eslint-disable-next-line no-control-regex
-      cleanText = cleanText.replace(/[^\x00-\x7F]/g, '');
+      let cleanText = text.replace(/[^\x00-\x7F]/g, '');
+      cleanText = cleanText.replace(/[\r]+/g, '');
+      if (paragraphOptions.numEmptyLines.checked) {
+        const numLines = parseInt(paragraphOptions.numEmptyLines.value, 10) + 1; // 1 empty line is \n\n, \n is only newline
+        const regex = `[\n]{${numLines}}`;
+        const re = new RegExp(regex, 'g');
+        cleanText = cleanText.replace(re, '$par$');
+      }
+      if (paragraphOptions.specCharSeq.checked) {
+        const specSeq = paragraphOptions.specCharSeq.value;
+        const re = new RegExp(escapeRegExp(specSeq), 'g');
+        cleanText = cleanText.replace(re, '$par$');
+      }
+
+      cleanText = cleanText.replace(/\s+/g, ' ').trim();
 
       const hash = Math.abs(hashCode(features));
 
