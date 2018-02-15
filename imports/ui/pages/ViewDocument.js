@@ -7,6 +7,7 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import fileDownload from 'react-file-download';
 import { upsertDocument, removeDocument, changePublicity } from '../../api/documents/methods';
 import NotFound from './NotFound';
+import CompareDocuments from './CompareDocumentsNew.js';
 
 const printJson = (str) => {
   const json = JSON.parse(str);
@@ -53,7 +54,7 @@ export default class ViewDocument extends React.Component {
       return <div/>;
     }
 
-    const collapsible = true;
+    // const collapsible = true;
     const defaultExpanded = false;
     const col = options ? 4 : 12;
 
@@ -206,9 +207,10 @@ export default class ViewDocument extends React.Component {
             <br/>
           </div>
         }
-        <Row>
-          {doc.featureData != null && this.printJsonGrid(doc.featureData, doc.options)}
-        </Row>
+        <CompareDocuments documents={[doc]}/>
+         {/* <Row> */}
+           {/* {doc.featureData != null && this.printJsonGrid(doc.featureData, doc.options)} */}
+         {/* </Row> */}
       </div>
     ) : <NotFound />;
   }
