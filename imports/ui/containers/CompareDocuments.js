@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import Documents from '../../api/documents/documents.js';
-import CompareDocuments from '../pages/CompareDocumentsNew.js';
+import CompareDocuments from '../pages/CompareDocuments.js';
 import Loading from '../components/Loading.js';
 import container from '../../modules/container';
 

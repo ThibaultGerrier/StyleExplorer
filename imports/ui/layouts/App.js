@@ -3,9 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Grid } from 'react-bootstrap';
-import { compose } from 'react-komposer';
 import { Meteor } from 'meteor/meteor';
-import getTrackerLoader from '../../modules/trackerLoader';
+import container from '../../modules/container';
 import Public from '../pages/Public';
 import Authenticated from '../pages/Authenticated';
 import AppNavigation from '../components/AppNavigation';
@@ -15,8 +14,6 @@ import NewDocument from '../pages/NewDocument';
 import EditDocument from '../containers/EditDocument';
 import ViewDocument from '../containers/ViewDocument';
 import Login from '../pages/Login';
-import RecoverPassword from '../pages/RecoverPassword';
-import ResetPassword from '../pages/ResetPassword';
 import Signup from '../pages/Signup';
 import NotFound from '../pages/NotFound';
 import NewMultipleDocuments from '../pages/NewMultipleDocuments';
@@ -67,4 +64,4 @@ const composer = (props, onData) => {
   });
 };
 
-export default compose(getTrackerLoader(composer))(App);
+export default container(composer, App);

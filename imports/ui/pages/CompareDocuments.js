@@ -1,350 +1,393 @@
 /* eslint-disable max-len */
-import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Col , Row, Button, Glyphicon } from 'react-bootstrap';
+import { Col, Row, Glyphicon, Popover, OverlayTrigger, Panel, Checkbox } from 'react-bootstrap';
 import { Bert } from 'meteor/themeteorchef:bert';
-import update from 'react-addons-update';
-import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
-import NotFound from './NotFound';
-import features from '../../modules/features';
-import Loading from "../components/Loading";
+import { SliderPicker } from 'react-color';
 
+import { features, types, nGramFeatures, whiteSpaceFeatures } from '../../modules/featuresClean';
+import Chart from '../../modules/charts';
 
-const SortableItem = SortableElement((props) => (
-    <div>
-      <Row className='topDivider'>
-        <Col xs={2} sm={2}  md={2} className='text-center'>
-          <Button className="glyphicon glyphicon-remove pull-left" aria-hidden="true" onClick={() => props.remove(props.feature)} style={{border: '0px solid transparent', fontSize: '1.2em',
-            color: 'grey', marginRight: '5px', marginTop: '7px', cursor: 'pointer', backgroundColor: 'transparent', outline: 'none', boxShadow: 'none'}}/>
-          <h5>
-            {props.getPrettyVersion(props.feature)}
-          </h5>
-        </Col>
-        {props.docs.map((doc, index) => (
-          <Col xs={props.col} sm={props.col}  md={props.col} className='leftDivider text-center' key={'item' + index} >
-            {props.getFeatureData(doc,props.feature)}
-          </Col>
-        ))}
-      </Row>
-    </div>
-  )
-);
+const getFeatureName = id => features[id].nameEn;
+const getFeatureDimension = id => features[id].dimensions;
+const getFeatureType = id => features[id].type;
+const getFeatureDescription = id => features[id].descriptionEn;
+const hasNumber = str => /\d/.test(str);
+const getTrailingNums = str => str.replace(/^\D+/g, '');
+const removeNonAlphabetic = str => str.replace(/[^A-Za-z]/g, '');
+const cleanFeatureName = id => removeNonAlphabetic(id);
+const isNGramFeature = id => nGramFeatures.includes(id);
+const isWhiteSpaceFeature = id => whiteSpaceFeatures.includes(id);
 
-
-const SortableList = SortableContainer((props) => {
-  return(
-    <div>
-      {props.items.map((feature, index) => (
-        <SortableItem key={`item-${index}`}
-                      index={index}
-                      feature={feature}
-                      docs={props.docs}
-                      col={props.col}
-                      getPrettyVersion={props.getPrettyVersion.bind(this)}
-                      getFeatureData={props.getFeatureData.bind(this)}
-                      remove={props.remove.bind(this)}
-        />
-      ))}
-    </div>
-  )
-});
-
-
+const updateToFirstPlace = (arr, e) => {
+  if (e.length === 0) {
+    return arr.sort();
+  }
+  const r = e.slice();
+  arr.sort().forEach((j) => {
+    if (!e.includes(j)) {
+      r.push(j);
+    }
+  });
+  return r;
+};
 
 export default class CompareDocuments extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      whichFeaturesList: [],
-      computeFeatureList: [],
-      docs: [],
-      deletedAll: false,
-      computedAll:false,
+      featuresList: [],
+      distinctFeatures: {},
+      documents: [],
+      bigIds: [],
+      colors: {},
+      glyphTypes: {},
+      intervalId: 0,
+      settings: {
+        groupNGrams: localStorage.getItem('groupNGrams') === 'true',
+      },
+      lowestNGram: {},
+      maxNGram: {},
     };
-    this.allFeatures = [];
+    this.defaultColors = ['#40bf45', '#4069bf', '#bf4042', '#b840bf', '#24194d', '#bf8d40', '#d279bc'];
+    this.curColor = -1; // first call makes +=1 before getting index
+  }
+
+  componentWillMount() {
+    this.setupFeatures();
+  }
+
+  setupFeatures() {
+    const { documents } = this.props;
+    const featureList = [];
+    const distinctFeatures = types;
+    const lowestNGram = {};
+    const maxNGram = {};
+    Object.keys(distinctFeatures).forEach((key) => {
+      distinctFeatures[key].features = [];
+      distinctFeatures[key].collapsed = localStorage.getItem(`panel-collapsed-${key}`) === 'true';
+      distinctFeatures[key].glyph = distinctFeatures[key].collapsed ? 'chevron-down' : 'chevron-up';
+    });
+    const colors = {};
+    const glyphTypes = {};
+    documents.forEach((doc) => {
+      colors[doc._id] = {
+        color: this.nextColor(),
+      };
+      glyphTypes[doc._id] = 'chevron-down';
+      const jsonObj = JSON.parse(doc.featureData);
+      Object.keys(jsonObj).forEach((id) => {
+        let featureId = id;
+        if (this.state.settings.groupNGrams) {
+          if (hasNumber(featureId)) {
+            const num = getTrailingNums(id);
+            featureId = removeNonAlphabetic(featureId);
+            if (lowestNGram[featureId] !== undefined && num < lowestNGram[featureId]) {
+              lowestNGram[featureId] = num;
+            } else if (lowestNGram[featureId] === undefined) {
+              lowestNGram[featureId] = num;
+            }
+            if (maxNGram[featureId] !== undefined && num > maxNGram[featureId]) {
+              maxNGram[featureId] = num;
+            } else if (maxNGram[featureId] === undefined) {
+              maxNGram[featureId] = num;
+            }
+          }
+        }
+        if (featureList.indexOf(featureId) === -1) {
+          featureList.push(featureId);
+          const featureType = getFeatureType(cleanFeatureName(featureId));
+          if (!distinctFeatures[featureType].features.includes(featureId)) {
+            distinctFeatures[featureType].features.push(featureId);
+          }
+        }
+      });
+    });
+    Object.keys(distinctFeatures).forEach((key) => {
+      distinctFeatures[key].features.sort();
+    });
+    this.setState({ colors });
+    this.setState({ glyphTypes });
+    this.setState({ featuresList: featureList.sort() });
+    this.setState({ documents });
+    this.setState({ distinctFeatures });
+    this.setState({ lowestNGram });
+    this.setState({ maxNGram });
   }
 
   componentDidMount() {
-    let documents = this.props.documents;
-    let featureList = [];
-    let docIds = [];
-    documents.map((doc) => {
-      let jsonObj = JSON.parse(doc.featureData);
-      Object.keys(jsonObj).map((ele) => {
-        let feature = ele.toString();
-        if(featureList.indexOf(feature) === -1) {
-          featureList.push(ele);
-        }
-      });
-      docIds.push(doc);
-    });
-    this.setState({whichFeaturesList: featureList.sort()});
-    this.setState({docs: docIds});
-
-    let computeFeatureList = [];
-    documents.map((doc) => {
-      let jsonObj = JSON.parse(doc.featureData);
-      featureList.map((feature) => {
-        if(jsonObj[feature] == null){
-          computeFeatureList.push([doc._id, feature, false]);
-        }
-      })
-    });
-    this.setState({computeFeatureList: computeFeatureList});
-
-    Object.keys(features.features).map((ele) => (
-      Object.keys(features.features[ele]).map((inner) => (
-          this.allFeatures.push(features.features[ele][inner])
-        )
-      )
-    ));
+    this.setCharts();
   }
 
-  getKey(id, tag){
-    return tag + id;
-  };
-
-  getPrettyVersion(ele){
-    let arr = this.allFeatures;
-    let regex = /\d/g;
-    let n = '';
-    if(regex.test(ele)){
-      n = `, with n=${ele.substring(ele.length-1, ele.length)}`;
-    }
-    ele = ele.substring(0,ele.length-1);
-    for(let i=0;i<arr.length;i++){
-      if(arr[i].includes(ele)){
-        return arr[i].split(' - ')[1] + n;
-      }
-    }
-  }
-
-  remove (ele){
-    if (this.state.whichFeaturesList.length <= 1){
-      Bert.alert('Sorry won\'t remove, if there is only one left', 'danger');
-      return;
-    }
-    let index = 0;
-    for(let i=0; i<this.state.whichFeaturesList.length; i++){
-      if(this.state.whichFeaturesList[i] === ele){
-        index = i;
-      }
-    }
-    this.setState({
-      whichFeaturesList: update(this.state.whichFeaturesList, {$splice: [[index, 1]]})
-    });
-    Bert.alert('Removed: '+ this.getPrettyVersion(ele), 'success');
-  }
-
-  getFeatureData(doc, ele){
-    let jsonObj = JSON.parse(doc.featureData);
-    //console.log(this.state.computeFeatureList[doc._id, ele]);
-
-    let index = -1;
-    for(let i=0; i<this.state.computeFeatureList.length; i++){
-      if(this.state.computeFeatureList[i][0]===doc._id && this.state.computeFeatureList[i][1]===ele){
-        index = i;
-        break;
-      }
-    }
-
-    if(jsonObj[ele] != null){
-      return(<h5>{jsonObj[ele].toString().substring(0,10)}</h5>)
-    } else {
-      return(
-        <div>
-          {!this.state.computeFeatureList[index][2] ?
-            <Button onClick={() => this.compute(doc, ele) } style={{marginTop: '7px', marginBottom: '7px'}}>
-              Compute
-            </Button>
-            : <Loading/>
+  getNGramFeatures(docId, featureId) {
+    const nGramData = {};
+    this.state.documents.forEach((doc) => {
+      if (doc._id === docId) {
+        const featureData = JSON.parse(doc.featureData);
+        Object.entries(featureData).forEach(([k, v]) => {
+          if (k.includes(featureId)) {
+            nGramData[getTrailingNums(k)] = v;
           }
-        </div>
-      )
-    }
-  }
-
-  removeAllNotComputed(){
-    let documents = this.props.documents;
-    let notComputedList = [];
-    documents.map((doc) => {
-      let jsonObj = JSON.parse(doc.featureData);
-      this.state.whichFeaturesList.map((feature) => {
-        if(jsonObj[feature]==null){
-          notComputedList.push([doc.title, feature]);
-        }
-      })
-    });
-
-    let whichFeaturesListOld = this.state.whichFeaturesList;
-    notComputedList.map((ele) => {
-      for(let i=0; i<this.state.whichFeaturesList.length; i++){
-        if(this.state.whichFeaturesList[i] === ele[1]){
-          whichFeaturesListOld.splice(i, 1);
-          break;
-        }
+        });
       }
     });
-    this.setState({whichFeaturesList: whichFeaturesListOld});
-    this.setState({deletedAll:true, computedAll:true})
+    return nGramData;
   }
 
-  computeAllNotComputed(){
-    let oldStateFeatureList = this.state.computeFeatureList;
-    for(let i=0; i<oldStateFeatureList.length; i++){
-      oldStateFeatureList[i][2]=true;
-    }
-    this.setState({computeFeatureList: oldStateFeatureList});
-
-
-    let documents = this.props.documents;
-
-    documents.map((doc) => {
-      let notComputedList = [];
-      let jsonObj = JSON.parse(doc.featureData);
-      this.state.whichFeaturesList.map((feature) => {
-        if(jsonObj[feature]==null){
-          notComputedList.push(feature);
+  setCharts() {
+    const charts = [];
+    this.state.featuresList.forEach((f) => {
+      let featureId = f;
+      let usedId = f;
+      if (this.state.settings.groupNGrams && isNGramFeature(f)) {
+        usedId = f + this.state.lowestNGram[f];
+      }
+      let num;
+      if (hasNumber(featureId)) {
+        num = getTrailingNums(featureId);
+        featureId = removeNonAlphabetic(featureId);
+      }
+      const data = {};
+      const nGrams = {};
+      this.state.documents.forEach((doc) => {
+        const featureData = JSON.parse(doc.featureData)[usedId];
+        if (this.state.settings.groupNGrams && isNGramFeature(f)) {
+          nGrams[doc._id] = {
+            id: doc._id,
+            name: doc.title,
+            data: this.getNGramFeatures(doc._id, f),
+          };
         }
+        data[doc._id] = {
+          id: doc._id,
+          name: doc.title,
+          data: featureData || [],
+        };
       });
+      // }
 
-      let featureStr = '';
-      for (let item of notComputedList){
-        featureStr += item + ' ';
+      const onZoomClick = (identifier, chart) => {
+        let { bigIds } = this.state;
+        if (bigIds.includes(identifier)) {
+          bigIds = bigIds.filter(item => item !== identifier);
+          chart.switchSize();
+        } else if (bigIds.length >= 2) {
+          Bert.alert('Cannot magnify more than 2 charts', 'danger');
+          return;
+        } else {
+          bigIds.push(identifier);
+          chart.switchSize();
+          this.scrollToTop();
+        }
+        this.setState({ bigIds });
+        let { featuresList } = this.state;
+        featuresList = updateToFirstPlace(featuresList, bigIds);
+        this.setState({ featuresList });
+        chart.resetChart();
+      };
+
+      const config = {
+        htmlId: `chart_${f}`,
+        featureId: usedId,
+        title: (num ? `${getFeatureName(featureId)} with n = ${num}` : getFeatureName(featureId)),
+        description: getFeatureDescription(featureId),
+        dimension: getFeatureDimension(featureId),
+        onZoomClick,
+        data,
+        nGrams,
+        curNGram: this.state.lowestNGram[f],
+        maxNGram: this.state.maxNGram[f],
+        isGroupedNGram: this.state.settings.groupNGrams && isNGramFeature(featureId),
+        colors: this.state.colors,
+        withWhiteSpace: isWhiteSpaceFeature(featureId),
+      };
+
+      const chart = new Chart(config);
+      if (getFeatureDimension(featureId) === '1') {
+        chart.lineChart();
+        // chart.boxplot();
+      } else {
+        chart.columnChart();
+        // chart.pieChart();
+        // chart.wordcloud();
       }
-      featureStr = featureStr.substring(0, featureStr.length - 1);
-      console.log(featureStr);
-
-      Meteor.call('runJava', doc._id, doc.body, featureStr, 'n_max=3');
-      Bert.alert('Computing the missing features, this may take some time...', 'success');
+      chart.create();
+      charts.push(chart);
     });
-
-    this.setState({deletedAll:true, computedAll:true})
+    this.setState({ charts });
   }
 
-  compute(doc, feature){
-
-    let index = -1;
-    for(let i=0; i<this.state.computeFeatureList.length; i++){
-      if(this.state.computeFeatureList[i][0]===doc._id && this.state.computeFeatureList[i][1]===feature){
-        index = i;
-        break;
-      }
+  scrollStep() {
+    if (window.pageYOffset === 0) {
+      clearInterval(this.state.intervalId);
     }
-    let oldStateFeatureList = this.state.computeFeatureList;
-    oldStateFeatureList[index][2]=true;
-    this.setState({computeFeatureList: oldStateFeatureList});
-
-    let regex = /\d/g;
-    let n;
-    let thirdArg;
-    if(regex.test(feature)){
-      n = feature.substring(feature.length-1, feature.length);
-      thirdArg = 'n_exact=' + n;
-    }else{
-      thirdArg = 'n_exact=2'
-    }
-    Meteor.call('runJava', doc._id, doc.body, feature, thirdArg);
-    Bert.alert('Computing: '+ this.getPrettyVersion(feature) + ' for ' + doc.title, 'success');
+    window.scroll(0, window.pageYOffset - 50);
   }
 
-  removeDoc(docId){
-    let docs = this.state.docs;
-    if(docs.length<=1){
-      Bert.alert('Sorry won\'t remove, if there is only one left', 'danger');
-      return;
-    }
-    for (let i=0; i< docs.length; i++){
-      if(docs[i]._id === docId){
-        docs.splice(i, 1);
-        this.setState({docs: docs});
-        break;
-      }
+  scrollToTop() {
+    const intervalId = setInterval(this.scrollStep.bind(this), 16.66);
+    this.setState({ intervalId });
+  }
+
+  componentDidUpdate() {
+    if (this.needToUpdateCharts) {
+      this.setCharts();
+      this.needToUpdateCharts = false;
+    } else {
+      this.state.charts.forEach((chart) => {
+        chart.chart.reflow();
+        chart.chart.redraw();
+      });
     }
   }
 
-  onSortEnd = ({oldIndex, newIndex}) => {
-    let {whichFeaturesList} = this.state;
-    this.setState({
-      whichFeaturesList: arrayMove(whichFeaturesList, oldIndex, newIndex),
+  changeColor(docId, color) {
+    const colorState = this.state.colors;
+    colorState[docId].color = color.hex;
+    this.setState({ colors: colorState });
+    this.state.charts.forEach((chart) => {
+      chart.setColor(docId, color.hex);
     });
-  };
+  }
+
+  changeGlyph(id) {
+    const { glyphTypes } = this.state;
+    glyphTypes[id] = glyphTypes[id] === 'chevron-down' ? 'chevron-up' : 'chevron-down';
+    this.setState({ glyphTypes });
+  }
+
+  changePanel(id) {
+    const { distinctFeatures } = this.state;
+    distinctFeatures[id].glyph = distinctFeatures[id].glyph === 'chevron-down' ? 'chevron-up' : 'chevron-down';
+    distinctFeatures[id].collapsed = !distinctFeatures[id].collapsed;
+    localStorage.setItem(`panel-collapsed-${id}`, distinctFeatures[id].collapsed.toString());
+    this.setState({ distinctFeatures });
+  }
+
+  nextColor() {
+    this.curColor += 1;
+    return this.defaultColors[this.curColor];
+  }
+
+  switchNGrams() {
+    const { settings } = this.state;
+    settings.groupNGrams = !this.state.settings.groupNGrams;
+    localStorage.setItem('groupNGrams', settings.groupNGrams.toString());
+    this.setState({ settings });
+    this.curColor = -1;
+    this.state.charts.forEach((chart) => {
+      chart.chart.destroy();
+    });
+    this.setupFeatures();
+    this.needToUpdateCharts = true;
+  }
 
   render() {
-    //basically i have the docs in the state and the props, when removing i only remove in the state,
-    //when in compute something, only the props will get the update, so i have to "synchronize" the 2 every
-    //time there is a change
-    let documentsfromState = this.state.docs;
-    let documentsfromProps = this.props.documents;
-    let documents = [];
+    // console.log('render');
+    const bigColSize = this.state.bigIds.length === 1 ? 12 : 6;
+    const titleColSize = this.state.documents.length > 4 ? 2 : 3;
 
-    if(documentsfromProps!=null && documentsfromState!=null){
-      for(let i=0; i<documentsfromState.length; i++){
-        for(let j=0; j<documentsfromProps.length; j++){
-          if(documentsfromState[i]._id===documentsfromProps[j]._id){
-            documents.push(documentsfromProps[i]);
-          }
-        }
-      }
-    }
+    const popOverColor = id => (
+        <Popover id="popover-positioned-bottom" title="Choose a color for this document">
+          <SliderPicker
+            color={this.state.colors[id].color}
+            onChangeComplete={ (col) => {
+              this.changeColor(id, col);
+            }}
+          />
+        </Popover>);
 
-    //documents = this.state.docs;
-    //console.log(this.state.docs);
+    const popOverSettings = () => (
+      <Popover id="popover-positioned-bottom" title="Settings">
+        <Checkbox checked={this.state.settings.groupNGrams}
+          onChange={() => this.switchNGrams() }>
+          group n-grams (switching might take a few seconds)
+        </Checkbox>
+      </Popover>);
 
-    let size = documents.length;
-
-    const col = Math.floor(10 / size);
-    let index=0;
-    let index2=0;
-
-    return documents ? (
+    return (
       <div>
-        {(!this.state.deletedAll && this.state.computeFeatureList.length !=0) &&
-        <div>
-          <Button onClick={() => this.removeAllNotComputed()}> remove all non-computed features </Button>
-          <br/>
-          <br/>
-          <Button onClick={() => this.computeAllNotComputed()}> compute all non-computed feaures </Button>
-          <br/><br/>
-        </div>
-        }
-
-        {size <=5 &&
         <Row>
-          <Col xs={2} sm={2}  md={2} lg={2} className='text-center'>
-            <h3>Features</h3>
+          <Col xs={11} sm={11} md={11} lg={11}>
+            <Row>
+              {this.state.documents.map(doc => (
+                <Col xs={6} sm={4} md={titleColSize} lg={titleColSize} key={`docTitle_${doc._id}`}>
+                  <Row>
+                    <Col xs={10} sm={10} md={10} lg={10}>
+                      <h3 style={{ display: 'inline-block' }}>{doc.title}</h3>
+                    </Col>
+                    <OverlayTrigger trigger="click" placement="bottom" overlay={popOverColor(doc._id)}>
+                      <Glyphicon glyph={this.state.glyphTypes[doc._id]} onClick={() => { this.changeGlyph(doc._id); }}
+                        style={{
+                        fontSize: '1.2em', color: this.state.colors[doc._id].color, marginTop: '25px', cursor: 'pointer',
+                      }}/>
+                    </OverlayTrigger>
+                  </Row>
+                </Col>
+               ))}
+            </Row>
           </Col>
-          {documents.map((doc) => (
-            <Col xs={col} sm={col}  md={col} lg={col} className='leftDivider text-center' key={this.getKey(index++, 'h1')}>
-              <h3 style={{display: 'inline-block'}}>{doc.title}</h3>
-              <Glyphicon glyph='remove pull-right' onClick={() => this.removeDoc(doc._id)}
-                         style={{fontSize: '1.2em', color: 'grey', marginRight: '9px', marginTop: '25px', cursor: 'pointer'}}/>
-            </Col>
-          ))}
-        </Row>
-        }
 
-        <SortableList items={this.state.whichFeaturesList}
-                      onSortEnd={this.onSortEnd}
-                      docs={documents}
-                      col={col}
-                      computeList={this.state.computeFeatureList}
-                      getPrettyVersion={this.getPrettyVersion.bind(this)}
-                      getFeatureData={this.getFeatureData.bind(this)}
-                      remove={this.remove.bind(this)}
-        />
+          <Col xs={1} sm={1} md={1} lg={1}>
+            <OverlayTrigger trigger="click" placement="bottom" overlay={popOverSettings()}>
+              <Glyphicon glyph="cog" style={{ fontSize: '2em', marginTop: '25px', cursor: 'pointer' }}/>
+            </OverlayTrigger>
+          </Col>
+        </Row>
         <br/>
-        <br/>
-        <br/>
-        <br/>
+
+         {this.state.bigIds.map((f, i) => (
+           <div key={`col_chart_${f}`}>
+             <Col xs={12} sm={bigColSize} md={bigColSize} lg={bigColSize}>
+               <div id={`chart_${f}`}/>
+             </Col>
+             {i === this.state.bigIds.length - 1 && <div> &nbsp; <hr/> </div>}
+           </div>
+         ))}
+
+         {Object.entries(this.state.distinctFeatures).map(([k, v]) => {
+           if (v.features.length === 0) {
+             return null;
+           }
+           return (
+             <Panel id="collapsible-panel-example-2" key={`panel_${k}`} defaultExpanded={!this.state.distinctFeatures[k].collapsed}
+               style={{ border: 'none' }}>
+               <Panel.Heading style={{ backgroundColor: 'white', border: 'none' }}>
+                 <Panel.Title toggle>
+                   <h3 style={{ display: 'inline-block' }} onClick={() => { this.changePanel(k); }}>{v.titleEn}</h3>
+                   <Glyphicon glyph={this.state.distinctFeatures[k].glyph}
+                      style={{
+                        fontSize: '1.2em', cursor: 'pointer', marginLeft: '10px',
+                      }}
+                      onClick={() => { this.changePanel(k); }}
+                   />
+                 </Panel.Title>
+               </Panel.Heading>
+               <Panel.Collapse>
+                 <Panel.Body style={{ padding: '5px' }}>
+                   {v.features.map((f) => {
+                     if (this.state.bigIds.includes(f)) {
+                       return null;
+                     }
+                     return (
+                       <div key={`col_chart_${f}`}>
+                         <Col xs={6} sm={4} md={3} lg={3}>
+                           <div id={`chart_${f}`}/>
+                         </Col>
+                       </div>
+                     );
+                   })}
+                 </Panel.Body>
+               </Panel.Collapse>
+             </Panel>
+           );
+         })}
       </div>
-    ) : <NotFound />;
+    );
   }
 }
 
 CompareDocuments.propTypes = {
-  doc: PropTypes.object,
+  documents: PropTypes.array,
 };
-
-//export default ViewDocument;

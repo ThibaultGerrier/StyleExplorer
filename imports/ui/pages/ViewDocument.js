@@ -7,7 +7,7 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import fileDownload from 'react-file-download';
 import { upsertDocument, removeDocument, changePublicity } from '../../api/documents/methods';
 import NotFound from './NotFound';
-import CompareDocuments from './CompareDocumentsNew.js';
+import CompareDocuments from './CompareDocuments.js';
 
 const printJson = (str) => {
   const json = JSON.parse(str);
