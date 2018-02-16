@@ -23,6 +23,7 @@ import NewMultipleDocuments from '../pages/NewMultipleDocuments';
 import PublicDocuments from '../pages/PublicDocuments';
 import CompareDocuments from '../containers/CompareDocuments';
 import About from '../pages/About';
+import Documentation from '../pages/Documentation';
 
 class App extends React.Component {
   render() {
@@ -40,11 +41,10 @@ class App extends React.Component {
           <Authenticated exact path="/documents/:_id/edit" component={EditDocument} {...this.props} />
           <Authenticated exact path="/compare/:_ids/" component={CompareDocuments} {...this.props} />
           <Authenticated exact path="/public" component={PublicDocuments} {...this.props} />
-          <Public path="/signup" component={Signup} {...this.props} />
-          <Public path="/login" component={Login} {...this.props} />
-          <Public path="/about" component={About} {...this.props} />
-          <Route name="recover-password" path="/recover-password" component={RecoverPassword}/>
-          <Route name="reset-password" path="/reset-password/:token" component={ResetPassword}/>
+          <Public exact path="/signup" component={Signup} {...this.props} />
+          <Public exact path="/login" component={Login} {...this.props} />
+          <Route exact path="/about" component={About} {...this.props} />
+          <Route exact path="/documentation" component={Documentation} {...this.props} />
           <Route component={NotFound}/>
         </Switch>
       </Grid>
@@ -53,7 +53,6 @@ class App extends React.Component {
     );
   }
 }
-
 
 App.propTypes = {
   loggingIn: PropTypes.bool,

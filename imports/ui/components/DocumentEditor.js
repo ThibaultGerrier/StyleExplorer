@@ -63,6 +63,7 @@ export default class DocumentEditor extends React.Component {
                 name="body"
                 defaultValue={ doc && doc.body }
                 placeholder="And some text ..."
+                style={{ height: 200 }}
               />
             </FormGroup>
           </Col>

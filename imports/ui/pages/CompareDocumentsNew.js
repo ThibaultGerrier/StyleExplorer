@@ -11,6 +11,7 @@ import Chart from '../../modules/chartsObj';
 const getFeatureName = id => features[id].nameEn;
 const getFeatureDimension = id => features[id].dimensions;
 const getFeatureType = id => features[id].type;
+const getFeatureDescription = id => features[id].descriptionEn;
 const hasNumber = str => /\d/.test(str);
 const getTrailingNums = str => str.replace(/^\D+/g, '');
 const removeNonAlphabetic = str => str.replace(/[^A-Za-z]/g, '');
@@ -190,6 +191,7 @@ export default class CompareDocumentsNew extends React.Component {
         htmlId: `chart_${f}`,
         featureId: usedId,
         title: (num ? `${getFeatureName(featureId)} with n = ${num}` : getFeatureName(featureId)),
+        description: getFeatureDescription(featureId),
         dimension: getFeatureDimension(featureId),
         onZoomClick,
         data,

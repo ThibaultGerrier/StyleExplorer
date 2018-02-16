@@ -29,11 +29,14 @@ const AuthenticatedNavigation = props => (
       </LinkContainer>
     </Nav>
     <Nav pullRight>
-      <LinkContainer to="about">
-        <NavItem eventKey={ 1 } href="/about">About</NavItem>
+      <LinkContainer to="documentation">
+        <NavItem eventKey={ 3 } href="/documentation">Documentation / FAQ</NavItem>
       </LinkContainer>
-      <NavDropdown eventKey={ 3 } title={ userName() } id="basic-nav-dropdown">
-        <MenuItem eventKey={ 3.1 } onClick={ () => handleLogout(props) }>Logout</MenuItem>
+      <LinkContainer to="about">
+        <NavItem eventKey={ 4 } href="/about">About</NavItem>
+      </LinkContainer>
+      <NavDropdown eventKey={ 5 } title={ userName() } id="basic-nav-dropdown">
+        <MenuItem eventKey={ 5.1 } onClick={ () => handleLogout(props) }>Logout</MenuItem>
       </NavDropdown>
     </Nav>
   </div>);

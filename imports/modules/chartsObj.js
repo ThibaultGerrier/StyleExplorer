@@ -32,6 +32,7 @@ export default class Chart {
     this.htmlId = config.htmlId;
     this.featureId = config.featureId;
     this.title = config.title;
+    this.description = config.description;
     this.dimension = config.dimension;
     this.data = config.data;
     this.onZoomClick = config.onZoomClick;
@@ -175,7 +176,15 @@ export default class Chart {
       },
     };
 
-    const buttons = ['separator', 'downloadJPEG', 'downloadPDF'];
+    const description = {
+      text: ' About this feature',
+      onclick: () => {
+        // no better idea without overkilling (modal maybe?)
+        alert(this.description);
+      },
+    };
+
+    const buttons = ['separator', 'downloadJPEG', 'downloadPDF', description];
 
     switch (this.type) {
       case 'line':
@@ -292,9 +301,14 @@ export default class Chart {
     Object.values(this.data).forEach((doc) => {
       const values = doc.data;
       const mappedData = [];
-      values.forEach((p, i) => {
-        mappedData.push([(i / (values.length - 1)) * 100, p]);
-      });
+      if (values.length === 1) {
+        mappedData.push([0, values[0]]);
+        mappedData.push([100, values[0]]);
+      } else {
+        values.forEach((p, i) => {
+          mappedData.push([(i / (values.length - 1)) * 100, p]);
+        });
+      }
       series.push({
         id: doc.id,
         name: doc.name,
@@ -315,6 +329,9 @@ export default class Chart {
     };
     options.xAxis = {
       crosshair: true,
+      title: {
+        text: 'Document completion (paragraphs)',
+      },
     };
     options.tooltip = {
       headerFormat: '<span>{point.x:.3f}</span><table>',

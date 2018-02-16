@@ -1,12 +1,11 @@
 /* eslint-disable max-len */
 
 import React from 'react';
-import { FormControl, Row, Col, Checkbox } from 'react-bootstrap';
+import { FormControl, Row, Col, Checkbox, Glyphicon, OverlayTrigger, Popover } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import MyCheckbox from './Checkbox';
 import features from '../../modules/features.js';
-
 
 export default class Features extends React.Component {
   constructor(props) {
@@ -36,7 +35,7 @@ export default class Features extends React.Component {
     this.setState({ selectedCheckboxes });
   }
 
-  createCheckbox(label) {
+  createCheckbox(label, title) {
     let isChecked = false;
     if (this.state.featureData != null) {
       const featureJson = JSON.parse(this.state.featureData);
@@ -52,6 +51,7 @@ export default class Features extends React.Component {
         handleCheckboxChange={() => this.toggleCheckbox}
         key={label}
         isChecked={isChecked}
+        title={title}
       />
     );
   }
@@ -61,14 +61,31 @@ export default class Features extends React.Component {
   }
 
   render() {
+    const popOverNGrams = () => (
+      <Popover id="popover-positioned-bottom" title="Choose n for n-grams">
+        These options allow you to choose a n for the different features using n-grams:<br/>
+        word n-grams, character n-grams and n-grams for tags.<br/>
+        You can choose between maximum or exactly.
+      </Popover>);
+
+    const popOverParagraphs = () => (
+      <Popover id="popover-positioned-bottom" title="Paragraphs">
+        These options allow you to specify what makes a paragraph.<br/>
+        Either by choosing a number of empty lines or using your own paragraph separator string.<br/>
+        The different features will then be computed for each paragraph separately, resulting in more data.<br/>
+        If you don&apos;t know what to enter, look into your text, see how many empty lines you have after each eg. chapter and enter that number into the field.<br/>
+        Disabling the paragraph options will result in only a single paragraph for your whole text.
+      </Popover>);
+
     return (
       <div>
-        {this.createCheckbox('isPublic - make the document public')}
+        {this.createCheckbox('isPublic - make the document public', 'If you choose to make your document public, other users will be able to see your document, its features and be able to make a private copy of it')}
         <br/>
         { this.createCheckbox('all - all features') }
         <div className="OuterMostClass row">
           <div className="outerClass col-md-4">
-            <h4> Lexical features</h4>
+            <h4 title="">
+              Lexical features</h4>
             { this.createCheckboxes(0) }
           </div>
           <div className="outerClass2 col-md-4">
@@ -83,7 +100,14 @@ export default class Features extends React.Component {
 
         <Row>
           <Col xs={ 12 } sm={ 12 } md={ 6 } lg={6}>
-            <h4> Choose n for the n-grams </h4>
+            <h4 style={{ display: 'inline-block' }}> Choose n for the n-grams </h4>
+            <OverlayTrigger trigger="click" placement="right" overlay={popOverNGrams()}>
+              <Glyphicon glyph='question-sign'
+                         onClick={() => console.log('asd')}
+                         style={{
+                           marginLeft: '10px', fontSize: '1.0em', color: 'grey', marginRight: '9px', marginTop: '25px', cursor: 'pointer',
+                         }}/>
+            </OverlayTrigger>
             <Row>
               <Col xs={ 4 } sm={ 4 } md={ 3 } lg={ 3 } >
                 <input
@@ -91,6 +115,8 @@ export default class Features extends React.Component {
                   value="maxRadio"
                   name="radio_option"
                   id="maxRadio"
+                  title="Select up to how many combinations the N-grams should go.&#013
+                  e.g entering '4' will calculate n-grams for n=2, n=3 and n=4"
                   checked={this.state.selectedOption === 'max'}
                   onChange={() => this.setState({ selectedOption: 'max' })}
                 />
@@ -109,18 +135,27 @@ export default class Features extends React.Component {
                   value="exactRadio"
                   name="radio_option"
                   id="exactRadio"
+                  title="If you want only specific Ns for N-grams you can enter only the numbers you want, separated by a single space.&#013;
+                   eg. '2 4' will give you N-grams with n=2 and n=4"
                   checked={this.state.selectedOption === 'exact'}
                   onChange={() => this.setState({ selectedOption: 'exact' })}
                 />
                 &nbsp;Exactly:
               </Col>
               <Col xs={ 4 } sm={ 4 } md={ 4 } lg={ 4 }>
-                <FormControl type="text" name="exactInput" onClick={() => this.setState({ selectedOption: 'exact' })}/>
+                <FormControl type="text" name="exactInput" defaultValue="2 3 4" onClick={() => this.setState({ selectedOption: 'exact' })}/>
               </Col>
             </Row>
           </Col>
           <Col xs={ 12 } sm={ 12 } md={ 6 } lg={6} >
-            <h4>Paragraphs</h4>
+            <h4 style={{ display: 'inline-block' }}>Paragraphs</h4>
+            <OverlayTrigger trigger="click" placement="right" overlay={popOverParagraphs()}>
+              <Glyphicon glyph='question-sign'
+                         onClick={() => console.log('asd')}
+                         style={{
+                         marginLeft: '10px', fontSize: '1.0em', color: 'grey', marginRight: '9px', marginTop: '25px', cursor: 'pointer',
+                        }}/>
+            </OverlayTrigger>
             <Row>
               <Col xs={ 6 } sm={ 6 } md={ 4 } lg={ 4 }>
                 <Checkbox id="emptyLines" checked={this.state.emptyLines.enabled}
@@ -129,7 +164,12 @@ export default class Features extends React.Component {
                 </Checkbox>
               </Col>
               <Col xs={ 4 } sm={ 4 } md={ 4 } lg={ 4 }>
-                <FormControl type="text" name="emptyLinesInput" value={this.state.emptyLines.value} onChange={e => this.setState({ emptyLines: { value: e.target.value, enabled: this.state.emptyLines.enabled } })}>
+                <FormControl
+                  type="text"
+                  name="emptyLinesInput"
+                  value={this.state.emptyLines.value}
+                  title="number, denoting how many empty lines should separate paragraphs"
+                  onChange={e => this.setState({ emptyLines: { value: e.target.value, enabled: this.state.emptyLines.enabled } })}>
                 </FormControl>
               </Col>
             </Row>
@@ -141,7 +181,15 @@ export default class Features extends React.Component {
                 </Checkbox>
               </Col>
               <Col xs={ 4 } sm={ 4 } md={ 4 } lg={ 4 }>
-                <FormControl type="text" name="charSeqInput" value={this.state.charSeq.value} onChange={e => this.setState({ charSeq: { value: e.target.value, enabled: this.state.charSeq.enabled } })}>
+                <FormControl
+                  type="text"
+                  name="charSeqInput"
+                  value={this.state.charSeq.value}
+                  title="sequence of characters that separates 2 paragraphs&#013;
+                  eg. with '$new_par$':&#013;
+                  hello how are you $new_par$ my name is nobody&#013;
+                  both those parts will be treated as 1 paragraph, so in total there will be 2."
+                  onChange={e => this.setState({ charSeq: { value: e.target.value, enabled: this.state.charSeq.enabled } })}>
                 </FormControl>
               </Col>
             </Row>

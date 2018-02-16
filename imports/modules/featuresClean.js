@@ -31,14 +31,21 @@ const features = {
     identifier: 'avgSyllablesPerSentence',
     nameEn: 'average syllables per sentence',
     type: 'lexicalFeatures',
-    descriptionEn: 'The formula A/B, where A = sum of all syllables and B = the number of sentences in the text, calculates average syllables per sentence. The tokenizer must be able to split the text into syllables. That is not a trivial quest, as not all syllables can be found by using rules. The only way to find 100% of all syllables is to have a lexical database that provides information about syllable splitting.',
+    descriptionEn: 'The formula A/B,' +
+    'where A = sum of all syllables and' +
+    'B = the number of sentences in the text,' +
+    'calculates average syllables per sentence. The tokenizer must be able to split the text into syllables. That is not a trivial quest, as not all syllables can be found by using rules. The only way to find 100% of all syllables is to have a lexical database that provides information about syllable splitting.',
     link: 'http://google.com',
     dimensions: '1',
   },
   avgWordFrequencyClass: {
     identifier: 'avgWordFrequencyClass',
     nameEn: 'average word frequency',
-    descriptionEn: 'S. M. zu Eissen, B. Stein and M. Kulig describe the word frequency class as the following: "The frequency class of a word is directly connected to Zipf\'s law and can be used as an indicator of a words customariness. Let C be a text corpus, and let |C| be the number of words in C. Moreover, let f(w) denote the frequency of a word w ∈ C, and let r(w) denote the rank of w in a word list of C, which is sorted by decreasing frequency. We define the word frequency class c(w) of a word w ∈ C as ⌊log2(f(w*)/f(w))⌋, where w* denotes the most frequently used word in C." Moreover, they say that the average word frequency class tells something about style complexity and the size of an author\'s vocabulary. With the help of a look-up table (containing the words with their frequency), this feature can be computed in linear time in the number of words.',
+    descriptionEn: 'S. M. zu Eissen, B. Stein and M. Kulig describe the word frequency class as the following: "The frequency class of a word is directly connected to Zipf\'s law and can be used as an indicator of a words customariness. ' +
+    'Let C be a text corpus, and let |C| be the number of words in C.' +
+    'Moreover, let f(w) denote the frequency of a word w ∈ C, and let r(w) denote the rank of w in a word list of C, which is sorted by decreasing frequency.' +
+    'We define the word frequency class c(w) of a word w ∈ C as ⌊log2(f(w*)/f(w))⌋, where w* denotes the most frequently used word in C."' +
+    'Moreover, they say that the average word frequency class tells something about style complexity and the size of an author\'s vocabulary. With the help of a look-up table (containing the words with their frequency), this feature can be computed in linear time in the number of words.',
     type: 'lexicalFeatures',
     dimensions: '1',
   },
@@ -96,7 +103,7 @@ const features = {
     descriptionEn: 'The Flesch Reading Ease of Flesch Kincaid grade is a readability test to indicate how difficult a text is to understand. A score from 90 to 100 means that the text is easily understood by an 11-year-old student. A score from 60 to 70 denotes to plain English, which is easily understood by an 13- to 15-year old student, while 0 to 30 means that the text is very difficult to read and understood mainly by university graduates.\n' +
     'For better comprehension, the Time magazine has a Flesch Reading Ease around 52, while the Harvard Law Review scores around the lower 30s. \n' +
     'The Flesch Reading Ease is defined by\n' +
-    '206.835 - 1.015(N/A) - 84:6(B/N), where\n' +
+    '206.835 - 1.015(N/A) - 84.6(B/N), where\n' +
     'N = Number of words in a text,\n' +
     'A = Number of sentences in a text and\n' +
     'B = Number of syllables in a text.',
