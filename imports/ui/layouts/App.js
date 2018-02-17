@@ -31,13 +31,13 @@ class App extends React.Component {
       <Grid>
         <Switch>
           <Route exact name="index" path="/" component={Index}/>
-          <Authenticated exact path="/documents" component={Documents} {...this.props} />
+          <Route exact path="/documents" component={Documents} {...this.props} />
           <Authenticated exact path="/documents/new" component={NewDocument} {...this.props} />
           <Authenticated exact path="/documents/new-multiple" component={NewMultipleDocuments} {...this.props} />
-          <Authenticated exact path="/documents/:_id" component={ViewDocument} {...this.props} />
+          <Route exact path="/documents/:_id" component={ViewDocument} {...this.props} />
           <Authenticated exact path="/documents/:_id/edit" component={EditDocument} {...this.props} />
           <Authenticated exact path="/compare/:_ids/" component={CompareDocuments} {...this.props} />
-          <Authenticated exact path="/public" component={PublicDocuments} {...this.props} />
+          <Route exact path="/public" component={PublicDocuments} {...this.props} />
           <Public exact path="/signup" component={Signup} {...this.props} />
           <Public exact path="/login" component={Login} {...this.props} />
           <Route exact path="/about" component={About} {...this.props} />

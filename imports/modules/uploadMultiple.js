@@ -19,7 +19,7 @@ const handleUpsert = () => {
       title: ele[0].toString().trim(),
       body: ele[1].toString().trim(),
       author: Meteor.userId(),
-      authorName: `${Meteor.user().profile.name.first} ${Meteor.user().profile.name.last}`,
+      authorName: Meteor.user().username,
       isPublic: document.querySelector('[value=isPublic]').checked,
       featureCompletion: 0.0,
       featureData: '{}',

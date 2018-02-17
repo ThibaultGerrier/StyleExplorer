@@ -12,7 +12,7 @@ const login = () => {
 
   Meteor.loginWithPassword(username, password, (error) => {
     if (error) {
-      Bert.alert(error.reason, 'warning');
+      Bert.alert(error.reason, 'error');
     } else {
       Bert.alert('Logged in!', 'success');
 

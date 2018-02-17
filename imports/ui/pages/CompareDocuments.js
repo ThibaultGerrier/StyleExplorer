@@ -60,6 +60,7 @@ export default class CompareDocuments extends React.Component {
 
   setupFeatures() {
     const { documents } = this.props;
+
     const featureList = [];
     const distinctFeatures = types;
     const lowestNGram = {};
@@ -316,6 +317,9 @@ export default class CompareDocuments extends React.Component {
                   <Row>
                     <Col xs={10} sm={10} md={10} lg={10}>
                       <h3 style={{ display: 'inline-block' }}>{doc.title}</h3>
+                      {doc.featureData === '{}' &&
+                        <div>(no data yet)</div>
+                      }
                     </Col>
                     <OverlayTrigger trigger="click" placement="bottom" overlay={popOverColor(doc._id)}>
                       <Glyphicon glyph={this.state.glyphTypes[doc._id]} onClick={() => { this.changeGlyph(doc._id); }}
@@ -390,4 +394,5 @@ export default class CompareDocuments extends React.Component {
 
 CompareDocuments.propTypes = {
   documents: PropTypes.array,
+  docReady: PropTypes.bool,
 };

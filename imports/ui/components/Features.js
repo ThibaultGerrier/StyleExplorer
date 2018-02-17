@@ -108,15 +108,14 @@ export default class Features extends React.Component {
                            marginLeft: '10px', fontSize: '1.0em', color: 'grey', marginRight: '9px', marginTop: '25px', cursor: 'pointer',
                          }}/>
             </OverlayTrigger>
-            <Row>
+            <Row title="Select up to how many combinations the N-grams should go.&#013
+                  e.g entering '4' will calculate n-grams for n=2, n=3 and n=4">
               <Col xs={ 4 } sm={ 4 } md={ 3 } lg={ 3 } >
                 <input
                   type="radio"
                   value="maxRadio"
                   name="radio_option"
                   id="maxRadio"
-                  title="Select up to how many combinations the N-grams should go.&#013
-                  e.g entering '4' will calculate n-grams for n=2, n=3 and n=4"
                   checked={this.state.selectedOption === 'max'}
                   onChange={() => this.setState({ selectedOption: 'max' })}
                 />
@@ -128,15 +127,14 @@ export default class Features extends React.Component {
               </Col>
             </Row>
             <br/>
-            <Row>
+            <Row title="If you want only specific Ns for N-grams you can enter only the numbers you want, separated by a single space.&#013;
+                   eg. '2 4' will give you N-grams with n=2 and n=4">
               <Col xs={ 4 } sm={ 4 } md={ 3 } lg={ 3 }>
                 <input
                   type="radio"
                   value="exactRadio"
                   name="radio_option"
                   id="exactRadio"
-                  title="If you want only specific Ns for N-grams you can enter only the numbers you want, separated by a single space.&#013;
-                   eg. '2 4' will give you N-grams with n=2 and n=4"
                   checked={this.state.selectedOption === 'exact'}
                   onChange={() => this.setState({ selectedOption: 'exact' })}
                 />
@@ -156,10 +154,13 @@ export default class Features extends React.Component {
                          marginLeft: '10px', fontSize: '1.0em', color: 'grey', marginRight: '9px', marginTop: '25px', cursor: 'pointer',
                         }}/>
             </OverlayTrigger>
-            <Row>
+            <Row title="number denoting how many empty lines should separate paragraphs">
               <Col xs={ 6 } sm={ 6 } md={ 4 } lg={ 4 }>
-                <Checkbox id="emptyLines" checked={this.state.emptyLines.enabled}
-                          onChange={e => this.setState({ emptyLines: { enabled: e.target.checked, value: this.state.emptyLines.value } }) }>
+                <Checkbox
+                  title="number denoting how many empty lines should separate paragraphs"
+                  id="emptyLines"
+                  checked={this.state.emptyLines.enabled}
+                  onChange={e => this.setState({ emptyLines: { enabled: e.target.checked, value: this.state.emptyLines.value } }) }>
                   Number of empty lines:
                 </Checkbox>
               </Col>
@@ -168,15 +169,23 @@ export default class Features extends React.Component {
                   type="text"
                   name="emptyLinesInput"
                   value={this.state.emptyLines.value}
-                  title="number, denoting how many empty lines should separate paragraphs"
                   onChange={e => this.setState({ emptyLines: { value: e.target.value, enabled: this.state.emptyLines.enabled } })}>
                 </FormControl>
               </Col>
             </Row>
-            <Row>
+            <Row title="sequence of characters that separates 2 paragraphs&#013;
+                  eg. with '$new_par$':&#013;
+                  hello how are you $new_par$ my name is nobody&#013;
+                  both those parts will be treated as 1 paragraph, so in total there will be 2.">
               <Col xs={ 6 } sm={ 6 } md={ 4 } lg={ 4 }>
-                <Checkbox id="charSeq" checked={this.state.charSeq.enabled}
-                          onChange={e => this.setState({ charSeq: { enabled: e.target.checked, value: this.state.charSeq.value } }) }>
+                <Checkbox
+                  title="sequence of characters that separates 2 paragraphs&#013;
+                  eg. with '$new_par$':&#013;
+                  hello how are you $new_par$ my name is nobody&#013;
+                  both those parts will be treated as 1 paragraph, so in total there will be 2."
+                  id="charSeq"
+                  checked={this.state.charSeq.enabled}
+                  onChange={e => this.setState({ charSeq: { enabled: e.target.checked, value: this.state.charSeq.value } }) }>
                   Special character sequence:
                 </Checkbox>
               </Col>
@@ -185,10 +194,6 @@ export default class Features extends React.Component {
                   type="text"
                   name="charSeqInput"
                   value={this.state.charSeq.value}
-                  title="sequence of characters that separates 2 paragraphs&#013;
-                  eg. with '$new_par$':&#013;
-                  hello how are you $new_par$ my name is nobody&#013;
-                  both those parts will be treated as 1 paragraph, so in total there will be 2."
                   onChange={e => this.setState({ charSeq: { value: e.target.value, enabled: this.state.charSeq.enabled } })}>
                 </FormControl>
               </Col>

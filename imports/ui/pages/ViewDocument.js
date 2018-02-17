@@ -22,7 +22,7 @@ const makePrivateCopy = (doc) => {
     title: `${doc.title} by ${doc.authorName}`,
     body: doc.body,
     author: Meteor.userId(),
-    authorName: `${Meteor.user().profile.name.first} ${Meteor.user().profile.name.last}`,
+    authorName: Meteor.user().username,
     isPublic: false,
     featureCompletion: doc.featureCompletion,
     featureData: doc.featureData,
@@ -130,7 +130,6 @@ export default class ViewDocument extends React.Component {
 
   render() {
     const { doc } = this.props;
-
     if (doc.isPublic === false && doc.author !== Meteor.userId()) { // someone trying to access a private document of another user
       alert('nice try');
       this.props.history.push('/');
@@ -168,7 +167,11 @@ export default class ViewDocument extends React.Component {
                 </h4>
                 <br/>
                 <br/>
-                <Button className="pull-right" onClick={() => makePrivateCopy(doc)}>make private copy</Button>
+                {
+                  Meteor.userId() ?
+                    <Button className="pull-right" onClick={() => makePrivateCopy(doc)}>make private copy</Button>
+                    : <Button className="pull-right" disabled title="Can only make copies when you are logged in">make private copy</Button>
+                }
               </div>
             }
             </div>
@@ -207,7 +210,9 @@ export default class ViewDocument extends React.Component {
             <br/>
           </div>
         }
-        <CompareDocuments documents={[doc]}/>
+        {doc.featureData !== '{}' &&
+          <CompareDocuments documents={[doc]}/>
+        }
          {/* <Row> */}
            {/* {doc.featureData != null && this.printJsonGrid(doc.featureData, doc.options)} */}
          {/* </Row> */}

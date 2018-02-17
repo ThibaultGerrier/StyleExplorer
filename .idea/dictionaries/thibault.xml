@@ -2,6 +2,7 @@
   <dictionary name="thibault">
     <words>
       <w>boxplot</w>
+      <w>clearfix</w>
       <w>combi</w>
       <w>crosshair</w>
       <w>dropzone</w>
@@ -10,6 +11,7 @@
       <w>nums</w>
       <w>onloadend</w>
       <w>signup</w>
+      <w>textarea</w>
       <w>textresult</w>
       <w>upsert</w>
       <w>wordcloud</w>
