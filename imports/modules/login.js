@@ -7,10 +7,10 @@ import './validation.js';
 let component;
 
 const login = () => {
-  const email = document.querySelector('[name="emailAddress"]').value;
+  const username = document.querySelector('[name="username"]').value;
   const password = document.querySelector('[name="password"]').value;
 
-  Meteor.loginWithPassword(email, password, (error) => {
+  Meteor.loginWithPassword(username, password, (error) => {
     if (error) {
       Bert.alert(error.reason, 'warning');
     } else {
@@ -29,18 +29,16 @@ const login = () => {
 const validate = () => {
   $(component.loginForm).validate({
     rules: {
-      emailAddress: {
+      username: {
         required: true,
-        email: true,
       },
       password: {
         required: true,
       },
     },
     messages: {
-      emailAddress: {
-        required: 'Need an email address here.',
-        email: 'Is this email address legit?',
+      username: {
+        required: 'Need a username here.',
       },
       password: {
         required: 'Need a password here.',

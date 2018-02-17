@@ -24,11 +24,11 @@ export default class Login extends React.Component {
               onSubmit={ this.handleSubmit }
             >
               <FormGroup>
-                <ControlLabel>Email Address</ControlLabel>
+                <ControlLabel>Username</ControlLabel>
                 <FormControl
-                  type="email"
-                  name="emailAddress"
-                  placeholder="Email Address"
+                  type="text"
+                  name="username"
+                  placeholder="username"
                 />
               </FormGroup>
               <FormGroup>

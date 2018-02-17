@@ -7,14 +7,8 @@ import './validation.js';
 let component;
 
 const getUserData = () => ({
-  email: document.querySelector('[name="emailAddress"]').value,
+  username: document.querySelector('[name="username"]').value,
   password: document.querySelector('[name="password"]').value,
-  profile: {
-    name: {
-      first: document.querySelector('[name="firstName"]').value,
-      last: document.querySelector('[name="lastName"]').value,
-    },
-  },
 });
 
 const signup = () => {
@@ -33,35 +27,21 @@ const signup = () => {
 const validate = () => {
   $(component.signupForm).validate({
     rules: {
-      firstName: {
+      username: {
         required: true,
-      },
-      lastName: {
-        required: true,
-      },
-      emailAddress: {
-        required: true,
-        email: true,
       },
       password: {
         required: true,
-        minlength: 6,
+        minlength: 3,
       },
     },
     messages: {
-      firstName: {
-        required: 'First name?',
-      },
-      lastName: {
-        required: 'Last name?',
-      },
-      emailAddress: {
-        required: 'Need an email address here.',
-        email: 'Is this email address legit?',
+      username: {
+        required: 'Need a username here.',
       },
       password: {
         required: 'Need a password here.',
-        minlength: 'Use at least six characters, please.',
+        minlength: 'Use at least 3 characters, please.',
       },
     },
     submitHandler() { signup(); },
