@@ -50,9 +50,58 @@ export const changePublicity = new ValidatedMethod({
   },
 });
 
+function memorySizeOf(obj) {
+  let bytes = 0;
+
+  function sizeOf(obj) {
+    if (obj !== null && obj !== undefined) {
+      switch (typeof obj) {
+        case 'number':
+          bytes += 8;
+          break;
+        case 'string':
+          bytes += obj.length * 2;
+          break;
+        case 'boolean':
+          bytes += 4;
+          break;
+        case 'object':
+          var objClass = Object.prototype.toString.call(obj).slice(8, -1);
+          if (objClass === 'Object' || objClass === 'Array') {
+            for (const key in obj) {
+              if (!obj.hasOwnProperty(key)) continue;
+              sizeOf(obj[key]);
+            }
+          } else bytes += obj.toString().length * 2;
+          break;
+      }
+    }
+    return bytes;
+  }
+
+  function formatByteSize(bytes) {
+    if (bytes < 1024) return `${bytes} bytes`;
+    else if (bytes < 1048576) return `${(bytes / 1024).toFixed(3)} KiB`;
+    else if (bytes < 1073741824) return `${(bytes / 1048576).toFixed(3)} MiB`;
+    return `${(bytes / 1073741824).toFixed(3)} GiB`;
+  }
+
+  return formatByteSize(sizeOf(obj));
+}
+
+const sum = arr => arr.reduce((acc, cur) => acc + cur, 0);
+const avg = arr => sum(arr) / arr.length;
+
+const sortAndSlice = (a, sliceCount) =>
+  Object.entries(a)
+    .sort(([, av], [, bv]) => bv - av)
+    .slice(0, sliceCount)
+    .reduce((o, [k, v]) => {
+      o[k] = v;
+      return o;
+    }, {});
 
 function isNumber(n) { return !Number.isNaN(parseFloat(n)); }
-
 
 function extend(a, b) {
   return Object.assign(a, b);
@@ -91,20 +140,34 @@ function spawnProcess(dir, cmd) {
     : spawnLinuxProcess(dir, cmd);
 }
 
-
 function javaDone(_id, hash) {
-  // console.log('java is done');
+  console.log('java is done');
+  const howManyNGrams = 100;
+
   Meteor.bindEnvironment(Meteor._sleepForMs(1000));
-
   const result = fs.readFileSync(`${Meteor.absolutePath}/texts/textresult_${_id}${hash}.json`, 'utf8');
-  // console.log(result);
-  // console.log('result is here');
-
   fs.unlinkSync(`${Meteor.absolutePath}/texts/textresult_${_id}${hash}.json`);
-  // console.log('json file deleted');
+
+  const parsed = JSON.parse(result);
+  console.log(memorySizeOf(parsed));
+
+  Object.entries(parsed).forEach(([prop, value]) => {
+    if (!Array.isArray(value)) {
+      const occ = {};
+      Object.entries(value).forEach(([comb, arr]) => {
+        occ[comb] = avg(arr);
+      });
+      const r = sortAndSlice(occ, howManyNGrams);
+      Object.keys(r).forEach((k) => {
+        r[k] = value[k];
+      });
+      parsed[prop] = r;
+    }
+  });
+  console.log(memorySizeOf(parsed));
 
   const doc = Documents.findOne(_id);
-  const mergedJson = extend(JSON.parse(doc.featureData), JSON.parse(result));
+  const mergedJson = extend(JSON.parse(doc.featureData), parsed);
   // console.log(JSON.stringify(mergedJson));
   Documents.update({ _id }, { $set: { featureData: JSON.stringify(mergedJson) } });
   // /console.log('doc updated');

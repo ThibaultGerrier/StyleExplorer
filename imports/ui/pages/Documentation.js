@@ -20,7 +20,7 @@ export default class Documentation extends React.Component {
         <h4><a href="#2.6">2.6 What can I do when comparing documents?</a></h4>
         <h4><a href="#2.7">2.7 What are public documents?</a></h4>
         <h4><a href="#2.8">2.8 How do I compare my documents with public documents?</a></h4>
-
+        <h4><a href="#2.9">2.9 My document is stuck at 100%?</a></h4>
 
         <h2 id="1">1. Accounts</h2>
 
@@ -52,7 +52,7 @@ export default class Documentation extends React.Component {
           style={{
             marginLeft: '5px', fontSize: '1.0em', color: 'grey', marginRight: '5px', cursor: 'pointer',
           }}/>
-        to get more information on the settings you can configure. Or simply hover on the fields themselves to see what you can enter. You cannot do anything wrong, so no worries.
+        to get more information on the settings you can configure. Or simply hover on the fields themselves to see what you can enter. You cannot do anything wrong, so no worries. <br/>
 
         <h3 id="2.3">2.3 What are paragraphs?</h3>
         When computing the features the documents are split into pieces or paragraphs to see how the document performs for each feature.
@@ -95,6 +95,11 @@ export default class Documentation extends React.Component {
         The next time you view <a href="/documents"> your documents</a> you will see the public document you just made a copy of listed there with an adjusted title, which includes the username of the public document.
         This document is now your own, you can edit it, delete it, make it public. <br/>
         Furthermore you can now compare it with your own documents.
+        <br/><br/>
+
+        <h3 id="2.9">2.9 My document is stuck at 100%?</h3>
+        When uploading big documents, they will get stuck at 100% for a while (up to a few minutes). Should the 100% remain for a longer period, your document upload might have failed.
+        You can try to split the document in parts, remove unwanted features, decrease N for n-grams.
         <br/><br/>
       </div>
     );
