@@ -79,6 +79,9 @@ export default class CompareDocuments extends React.Component {
       glyphTypes[doc._id] = 'chevron-down';
       const jsonObj = JSON.parse(doc.featureData);
       Object.keys(jsonObj).forEach((id) => {
+        if (id === 'noFeatures') {
+          return;
+        }
         let featureId = id;
         if (this.state.settings.groupNGrams) {
           if (hasNumber(featureId)) {

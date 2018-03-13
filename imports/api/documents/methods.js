@@ -148,22 +148,29 @@ function javaDone(_id, hash) {
   const result = fs.readFileSync(`${Meteor.absolutePath}/texts/textresult_${_id}${hash}.json`, 'utf8');
   fs.unlinkSync(`${Meteor.absolutePath}/texts/textresult_${_id}${hash}.json`);
 
-  const parsed = JSON.parse(result);
+  let parsed = JSON.parse(result);
   console.log(memorySizeOf(parsed));
 
-  Object.entries(parsed).forEach(([prop, value]) => {
-    if (!Array.isArray(value)) {
-      const occ = {};
-      Object.entries(value).forEach(([comb, arr]) => {
-        occ[comb] = avg(arr);
-      });
-      const r = sortAndSlice(occ, howManyNGrams);
-      Object.keys(r).forEach((k) => {
-        r[k] = value[k];
-      });
-      parsed[prop] = r;
-    }
-  });
+  if (!parsed['no features were computed']) {
+    Object.entries(parsed).forEach(([prop, value]) => {
+      if (!Array.isArray(value)) {
+        const occ = {};
+        Object.entries(value).forEach(([comb, arr]) => {
+          occ[comb] = avg(arr);
+        });
+        const r = sortAndSlice(occ, howManyNGrams);
+        Object.keys(r).forEach((k) => {
+          r[k] = value[k];
+        });
+        parsed[prop] = r;
+      }
+    });
+  } else {
+    parsed = {
+      noFeatures: '',
+    };
+  }
+
   console.log(memorySizeOf(parsed));
 
   const doc = Documents.findOne(_id);
