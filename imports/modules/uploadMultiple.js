@@ -11,6 +11,10 @@ let component;
 
 const handleUpsert = () => {
   // console.log(component);
+  if (component.state.list.length > 5) {
+    Bert.alert('Cannot upload more then 5 documents at once', 'danger');
+    return;
+  }
   _.each(component.state.list, (ele) => {
     // console.log(ele);
 

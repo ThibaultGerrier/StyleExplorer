@@ -44,8 +44,8 @@ export default class DocumentsList extends React.Component {
     });
     if (selectedDocs.length < 2) {
       Bert.alert('Please select at least 2 documents', 'danger');
-    } else if (selectedDocs.length > 10) {
-      Bert.alert('Please don\'t select more than 5 documents', 'danger');
+    } else if (selectedDocs.length > 6) {
+      Bert.alert('Please don\'t select more than 6 documents', 'danger');
     } else {
       this.props.history.push(`/compare/${selectedDocs.join('.')}`);
     }

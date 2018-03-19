@@ -190,7 +190,7 @@ if (Meteor.isServer) {
       check(paragraphOptions, Object);
 
       // eslint-disable-next-line no-control-regex
-      let cleanText = text.replace(/[^\x00-\x7F]/g, '');
+      let cleanText = text.replace(/[^\x00-\x7Féàèùâêîôûçëïüäöß]/ig, '');
       cleanText = cleanText.replace(/[\r]+/g, '');
       if (paragraphOptions.numEmptyLines.checked) {
         const numLines = parseInt(paragraphOptions.numEmptyLines.value, 10) + 1; // 1 empty line is \n\n, \n is only newline
