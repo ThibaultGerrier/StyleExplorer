@@ -334,9 +334,9 @@ export default class Chart {
       },
     };
     options.tooltip = {
-      headerFormat: '<span>{point.x:.3f}</span><table>',
+      headerFormat: '<span>{point.x:.4f}</span><table>',
       pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-      '<td style="padding:0"><b>{point.y:.3f}</b></td></tr>',
+      '<td style="padding:0"><b>{point.y:.4f}</b></td></tr>',
       footerFormat: '</table>',
       useHTML: true,
     };
@@ -405,7 +405,7 @@ export default class Chart {
         type: 'scatter',
         color,
         tooltip: {
-          pointFormat: 'Value: {point.y:.3f}',
+          pointFormat: 'Value: {point.y:.4f}',
         },
         data: [],
         id: `${doc.id}-outliers`,
@@ -488,11 +488,11 @@ export default class Chart {
       tooltip: {
         headerFormat: '',
         pointFormat: '<span style="color:{point.color}">●</span> <b> {point.key}</b><br/>' +
-        'Maximum: {point.high:.3f}<br/>' +
-        'Upper quartile: {point.q3:.3f}<br/>' +
-        'Median: {point.median:.3f}<br/>' +
-        'Lower quartile: {point.q1:.3f}<br/>' +
-        'Minimum: {point.low:.3f}<br/>',
+        'Maximum: {point.high:.4f}<br/>' +
+        'Upper quartile: {point.q3:.4f}<br/>' +
+        'Median: {point.median:.4f}<br/>' +
+        'Lower quartile: {point.q1:.4f}<br/>' +
+        'Minimum: {point.low:.4f}<br/>',
         footerFormat: '',
         useHTML: true,
         shared: true,
@@ -575,7 +575,7 @@ export default class Chart {
     options.tooltip = {
       headerFormat: '<span>{point.key}</span><table>',
       pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-      '<td style="padding:0"><b>{point.y:.3f}</b></td></tr>',
+      '<td style="padding:0"><b>{point.y:.5f}</b></td></tr>',
       footerFormat: '</table>',
       useHTML: true,
       shared: true,
@@ -635,7 +635,7 @@ export default class Chart {
 
     const options = this.getDefaultOptions('pie');
     options.tooltip = {
-      pointFormat: '{series.name}: <b>{point.percentage:.3f}%</b>',
+      pointFormat: '{series.name}: <b>{point.percentage:.5f}%</b>',
     };
     options.subtitle = {
       text: `Distribution for top ${this.pieChartMaxEntries}: ${this.data[this.curDocId].name}`,
@@ -650,7 +650,7 @@ export default class Chart {
         cursor: 'pointer',
         dataLabels: {
           enabled: false,
-          format: '<b>{point.name}</b>: {point.percentage:.3f} %',
+          format: '<b>{point.name}</b>: {point.percentage:.5f} %',
           style: {
             color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
           },
