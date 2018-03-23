@@ -4,8 +4,10 @@ import React from 'react';
 import { FormControl, Row, Col, Checkbox, Glyphicon, OverlayTrigger, Popover } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-import MyCheckbox from './Checkbox';
-import features from '../../modules/features.js';
+import { features } from '../../modules/featuresClean.js';
+
+const capitalizeFirstLetter = string => string.charAt(0).toUpperCase() + string.slice(1);
+const removeNonAlphabetic = str => str.replace(/[^A-Za-z]/g, '');
 
 export default class Features extends React.Component {
   constructor(props) {
@@ -22,42 +24,81 @@ export default class Features extends React.Component {
         enabled: true,
         value: '$new_par$',
       },
+      features: {
+        lexicalFeatures: {},
+        syntacticalFeatures: {},
+        errorFeatures: {},
+        allLexical: false,
+        allSyntactical: false,
+        allError: false,
+        all: false,
+      },
     };
-  }
-
-  toggleCheckbox(label) {
-    const { selectedCheckboxes } = this.state;
-    if (selectedCheckboxes.has(label)) {
-      selectedCheckboxes.delete(label);
-    } else {
-      selectedCheckboxes.add(label);
-    }
-    this.setState({ selectedCheckboxes });
-  }
-
-  createCheckbox(label, title) {
-    let isChecked = false;
+    Object.values(features).forEach((f) => {
+      this.state.features[f.type][f.identifier] = false;
+    });
     if (this.state.featureData != null) {
       const featureJson = JSON.parse(this.state.featureData);
       Object.keys(featureJson).forEach((feature) => {
-        if (feature.includes(label.split(' - ')[0])) {
-          isChecked = true;
-        }
+        Object.entries(this.state.features).forEach(([key, val]) => {
+          if (typeof val === 'object' && Object.keys(val).includes(removeNonAlphabetic(feature))) {
+            this.state.features[key][removeNonAlphabetic(feature)] = true;
+          }
+        });
       });
     }
-    return (
-      <MyCheckbox
-        label={label}
-        handleCheckboxChange={() => this.toggleCheckbox}
-        key={label}
-        isChecked={isChecked}
-        title={title}
-      />
-    );
   }
 
-  createCheckboxes(i) {
-    return features.features[i].map(label => this.createCheckbox(label));
+  componentDidMount() {
+    this.setAllBoxes();
+  }
+
+  createCheckBoxGroup(type) {
+    const allStr = `all${capitalizeFirstLetter(type)}`;
+    return <div>
+      <Checkbox value={allStr} checked={this.state.features[allStr]} onClick={() => {
+        const stateFeatures = this.state.features;
+        const catFeature = stateFeatures[`${type}Features`];
+        stateFeatures[allStr] = !stateFeatures[allStr];
+        // console.log(catFeature);
+        Object.keys(catFeature).forEach((f) => {
+          catFeature[f] = stateFeatures[allStr];
+        });
+        // console.log(catFeature);
+        stateFeatures[catFeature] = catFeature;
+        this.setState({ features: stateFeatures });
+        this.setAllBoxes();
+      }} onChange={() => {}}>
+        <b>all {type} features</b>
+      </Checkbox>
+      {Object.values(features).filter(f => f.type === `${type}Features`).map(f =>
+        <Checkbox key={f.identifier} title={f.descriptionEn} value={f.identifier}
+                   checked={this.state.features[`${type}Features`][f.identifier]}
+                  onClick={() => this.switchBox(f.type, f.identifier)}
+                  onChange={() => {}}
+        >
+          {f.nameEn}
+        </Checkbox>)}
+    </div>;
+  }
+
+  setAllBoxes() {
+    const featureState = this.state.features;
+    Object.entries(this.state.features).forEach(([type, val]) => {
+      if (typeof val !== 'object' && type !== 'all') {
+        const allType = `${type.substring(3).toLocaleLowerCase()}Features`;
+        featureState[type] = Object.values(this.state.features[allType]).reduce((acc, cur) => acc && cur, true);
+      }
+    });
+    featureState.all = Object.entries(this.state.features).filter(([key, val]) => typeof val !== 'object' && key !== 'all').map(([, val]) => val).reduce((acc, cur) => acc && cur, true);
+    this.setState({ features: featureState });
+  }
+
+  switchBox(type, id) {
+    const featureState = this.state.features;
+    featureState[type][id] = !featureState[type][id];
+    this.setState({ features: featureState });
+    this.setAllBoxes();
   }
 
   render() {
@@ -79,22 +120,38 @@ export default class Features extends React.Component {
 
     return (
       <div>
-        {this.createCheckbox('isPublic - make the document public', 'If you choose to make your document public, other users will be able to see your document, its features and be able to make a private copy of it')}
+        <Checkbox value="isPublic" title="If you choose to make your document public, other users will be able to see your document, its features and be able to make a private copy of it">
+          make the document public
+        </Checkbox>
         <br/>
-        { this.createCheckbox('all - all features') }
+        <Checkbox value="all" checked={this.state.features.all} onClick={() => {
+          const stateFeatures = this.state.features;
+          stateFeatures.all = !stateFeatures.all;
+          Object.entries(stateFeatures).forEach(([key, val]) => {
+            if (typeof val === 'object') {
+              Object.keys(val).forEach((f) => {
+                stateFeatures[key][f] = stateFeatures.all;
+              });
+            } else if (val !== 'all') {
+              stateFeatures[key] = stateFeatures.all;
+            }
+          });
+          this.setState({ features: stateFeatures });
+        }} onChange={() => {}}>
+          <b>all features</b>
+        </Checkbox>
         <div className="OuterMostClass row">
           <div className="outerClass col-md-4">
-            <h4 title="">
-              Lexical features</h4>
-            { this.createCheckboxes(0) }
+            <h4>Lexical features</h4>
+            { this.createCheckBoxGroup('lexical') }
           </div>
           <div className="outerClass2 col-md-4">
             <h4> Syntactical features </h4>
-            { this.createCheckboxes(1) }
+            { this.createCheckBoxGroup('syntactical') }
           </div>
           <div className="outerClass3 col-md-4">
             <h4> Error features </h4>
-            { this.createCheckboxes(2) }
+            { this.createCheckBoxGroup('error') }
           </div>
         </div>
 
