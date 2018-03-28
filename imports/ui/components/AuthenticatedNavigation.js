@@ -28,10 +28,10 @@ const AuthenticatedNavigation = props => (
       </LinkContainer>
     </Nav>
     <Nav pullRight>
-      <LinkContainer to="documentation">
+      <LinkContainer to="/documentation">
         <NavItem eventKey={ 3 } href="/documentation">Documentation / FAQ</NavItem>
       </LinkContainer>
-      <LinkContainer to="about">
+      <LinkContainer to="/about">
         <NavItem eventKey={ 4 } href="/about">About</NavItem>
       </LinkContainer>
       <NavDropdown eventKey={ 5 } title={ userName() } id="basic-nav-dropdown">

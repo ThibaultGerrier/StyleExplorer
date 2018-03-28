@@ -13,7 +13,7 @@ const PublicNavigation = () => (
       </LinkContainer>
     </Nav>
     <Nav pullRight>
-      <LinkContainer to="documentation">
+      <LinkContainer to="/documentation">
         <NavItem eventKey={3} href="/documentation">Documentation / FAQ</NavItem>
       </LinkContainer>
       <LinkContainer to="/about">

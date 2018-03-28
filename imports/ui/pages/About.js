@@ -7,8 +7,8 @@ export default class About extends React.Component {
       <div>
         <h3>Writing Styles</h3>
         <p>
-          This project is part of the bachelor thesis of Thibault Gerrier under the supervision of Michael Tschuggnall, PhD<br/>
-          The code can be found at github: <a href ='https://github.com/ThibaultGerrier/WritingStyles'> link </a>
+          This project is part of the bachelor thesis &quot;Visualization of Writing Styles&quot; by Thibault Gerrier (thibault.gerrier@student.uibk.ac.at) under the supervision of Michael Tschuggnall, PhD (michael.tschuggnall@uibk.ac.at)
+          The code can be found on github: <a href ='https://github.com/ThibaultGerrier/WritingStyles'> link </a>
         </p>
       </div>
     );
