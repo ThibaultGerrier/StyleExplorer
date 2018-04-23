@@ -55,6 +55,16 @@ export default class Chart {
     this.pieChartMaxEntries = 50;
   }
 
+  getAverages(obj) {
+    const ret = {};
+    Object.entries(obj).forEach(([k, v]) => {
+      if (this.curWithWhiteSpace || !k.includes(' ')) {
+        ret[k] = avg(v);
+      }
+    });
+    return ret;
+  }
+
   setData() {
     const data = {};
     Object.entries(this.data).forEach(([k, v]) => {
@@ -280,7 +290,7 @@ export default class Chart {
             onclick() {
               that.onZoomClick(that.htmlId.replace('chart_', ''), that);
             },
-            symbol: 'url(/lupe-19.jpg)',
+            symbol: 'url(/lupeplus19grau.png)',
             symbolY: 20,
             symbolX: 20,
           },
@@ -593,7 +603,7 @@ export default class Chart {
   wordcloud() {
     this.type = 'wordcloud';
     const data = [];
-    sortAndSlice(getAverages(this.data[this.curDocId].data), this.wordCloudMaxEntries).forEach((entry) => {
+    sortAndSlice(this.getAverages(this.data[this.curDocId].data), this.wordCloudMaxEntries).forEach((entry) => {
       const [key, value] = Object.entries(entry)[0];
       data.push({
         name: key,
@@ -613,6 +623,10 @@ export default class Chart {
         fontSize: '1.2em',
       },
     };
+    options.tooltip = {
+      headerFormat: '<b>{point.key}: </b>',
+      pointFormat: '<b>{point.weight:.5f}%</b>',
+    };
     options.series = series;
     this.setOptions(options);
   }
@@ -620,7 +634,7 @@ export default class Chart {
   pieChart() {
     this.type = 'pie';
     const data = [];
-    sortAndSlice(getAverages(this.data[this.curDocId].data), this.pieChartMaxEntries).forEach((entry) => {
+    sortAndSlice(this.getAverages(this.data[this.curDocId].data), this.pieChartMaxEntries).forEach((entry) => {
       const [key, value] = Object.entries(entry)[0];
       data.push({
         name: key,
@@ -635,7 +649,8 @@ export default class Chart {
 
     const options = this.getDefaultOptions('pie');
     options.tooltip = {
-      pointFormat: '{series.name}: <b>{point.percentage:.5f}%</b>',
+      headerFormat: '<b>{point.key}: </b>',
+      pointFormat: '<b>{point.percentage:.5f}%</b>',
     };
     options.subtitle = {
       text: `Distribution for top ${this.pieChartMaxEntries}: ${this.data[this.curDocId].name}`,

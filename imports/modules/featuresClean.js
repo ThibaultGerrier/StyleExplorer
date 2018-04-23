@@ -188,7 +188,7 @@ const features = {
   },
   typeTokenRatio: {
     identifier: 'typeTokenRatio',
-    nameEn: 'type token Ration',
+    nameEn: 'Type Token Ratio',
     descriptionEn: 'According to K. S. Retherford, the type-token ratio measures the vocabulary diversity of an author. The formula A/B, where A = number of different words in a text(types) and B = number of words in a text(tokens), calculates the type-token ratio. M. Oakes mentions that "the type-token ratio depends on the length of the text (being generally less for longer texts), but is a useful measure of vocabulary richness when the comparison texts are of equal length."',
     type: 'lexicalFeatures',
     dimensions: '1',

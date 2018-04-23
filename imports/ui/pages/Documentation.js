@@ -15,7 +15,7 @@ export default class Documentation extends React.Component {
         <h4><a href="#2.1">2.1 How can i upload my own document?</a></h4>
         <h4><a href="#2.2">2.2 What are all the checkboxes and input fields when uploading a document?</a></h4>
         <h4><a href="#2.3">2.3 What are paragraphs?</a></h4>
-        <h4><a href="#2.4">2.4 Can i upload documents in languages other then english?</a></h4>
+        <h4><a href="#2.4">2.4 Can i upload documents in languages other than English?</a></h4>
         <h4><a href="#2.5">2.5 How can i compare my documents?</a></h4>
         <h4><a href="#2.6">2.6 What can I do when comparing documents?</a></h4>
         <h4><a href="#2.7">2.7 What are public documents?</a></h4>
@@ -59,9 +59,9 @@ export default class Documentation extends React.Component {
         This gives a better understanding of a document concerning its different phases.
         To create paragraphs take a look at the paragraph section when creating the document.
 
-        <h3 id="2.4">2.4 Can i upload documents in languages other then english? </h3>
+        <h3 id="2.4">2.4 Can i upload documents in languages other than English? </h3>
         Yes you can. Although the syntactical and error features will not work with languages other then english. Right now the text is getting cleaned before computing any features.
-        During this cleaning process all non ascii characters will be removed from the text. So any special character like é, à, ö, î will be removed.
+        During this cleaning process all non ascii characters will be removed from the text (with the exception of a few German and French characters like é, à, ö, î).
 
         <h3 id="2.5">2.5 How can i compare my documents?</h3>
         Simply go to <a href="/documents"> My documents </a> and check the documents you want to compare on the right with the
