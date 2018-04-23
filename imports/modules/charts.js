@@ -525,7 +525,7 @@ export default class Chart {
           occ[key] = avg(value);
         }
       });
-      occPerDoc[doc.id] = sortAndSlice(occ, this.wordCount + 5);
+      occPerDoc[doc.id] = sortAndSlice(occ, this.wordCount + 15);
     });
 
     let best = {};

@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="037d7edd-422f-47f6-a68a-4ce539764e78" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/ui/pages/CompareDocuments.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/pages/CompareDocuments.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/modules/charts.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/modules/charts.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -24,27 +24,27 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="charts.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="charts.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/imports/modules/charts.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1119">
-              <caret line="526" column="9" lean-forward="true" selection-start-line="526" selection-start-column="9" selection-end-line="526" selection-end-column="9" />
+            <state relative-caret-position="257">
+              <caret line="527" column="63" selection-start-line="527" selection-start-column="63" selection-end-line="527" selection-end-column="63" />
               <folding>
-                <marker date="1524475259941" expanded="true" signature="9330:9360" ph="..." />
-                <marker date="1524475259941" expanded="true" signature="9404:9413" ph="..." />
-                <marker date="1524475259941" expanded="true" signature="12963:12982" ph="..." />
-                <marker date="1524475259941" expanded="true" signature="15129:15159" ph="..." />
-                <marker date="1524475259941" expanded="true" signature="15203:15212" ph="..." />
+                <marker date="1524512231286" expanded="true" signature="9330:9360" ph="..." />
+                <marker date="1524512231286" expanded="true" signature="9404:9413" ph="..." />
+                <marker date="1524512231286" expanded="true" signature="12963:12982" ph="..." />
+                <marker date="1524512231286" expanded="true" signature="15130:15160" ph="..." />
+                <marker date="1524512231286" expanded="true" signature="15204:15213" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CompareDocuments.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CompareDocuments.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/imports/ui/pages/CompareDocuments.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
-              <caret line="381" column="59" lean-forward="true" selection-start-line="381" selection-start-column="59" selection-end-line="381" selection-end-column="59" />
+            <state relative-caret-position="575">
+              <caret line="392" column="12" lean-forward="true" selection-start-line="392" selection-start-column="12" selection-end-line="392" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -60,8 +60,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>white</find>
-      <find>too many</find>
       <find>3</find>
       <find>add docu</find>
       <find>setSt</find>
@@ -90,6 +88,8 @@
       <find>withWhiteSpace</find>
       <find>curWithWhiteSpace</find>
       <find>getAverages</find>
+      <find>this.wordco</find>
+      <find>wordCount</find>
     </findStrings>
     <replaceStrings>
       <replace>identifier</replace>
@@ -153,8 +153,8 @@
         <option value="$PROJECT_DIR$/imports/ui/components/PublicNavigation.js" />
         <option value="$PROJECT_DIR$/imports/modules/featuresClean.js" />
         <option value="$PROJECT_DIR$/imports/ui/pages/Documentation.js" />
-        <option value="$PROJECT_DIR$/imports/modules/charts.js" />
         <option value="$PROJECT_DIR$/imports/ui/pages/CompareDocuments.js" />
+        <option value="$PROJECT_DIR$/imports/modules/charts.js" />
       </list>
     </option>
   </component>
@@ -403,12 +403,14 @@
       <workItem from="1523957656014" duration="1846000" />
       <workItem from="1523990324084" duration="844000" />
       <workItem from="1523992134965" duration="5000" />
-      <workItem from="1524471027948" duration="5164000" />
+      <workItem from="1524471027948" duration="5801000" />
+      <workItem from="1524491172192" duration="43000" />
+      <workItem from="1524511791161" duration="440000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="252035000" />
+    <option name="totallyTimeSpent" value="253155000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -423,17 +425,16 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15700738" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32928178" />
+      <window_info anchor="bottom" id="Statistic" order="7" weight="0.6854928" />
+      <window_info anchor="bottom" id="Docker" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32779622" />
       <window_info id="npm" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.27131784" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32779622" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15700738" />
-      <window_info anchor="bottom" id="Statistic" order="7" weight="0.6854928" />
-      <window_info anchor="bottom" id="Docker" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.27131784" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32779622" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39977852" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -444,6 +445,7 @@
       <window_info anchor="bottom" id="Messages" order="9" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -784,24 +786,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/imports/modules/charts.js">
+    <entry file="file://$PROJECT_DIR$/imports/ui/pages/CompareDocuments.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1119">
-          <caret line="526" column="9" lean-forward="true" selection-start-line="526" selection-start-column="9" selection-end-line="526" selection-end-column="9" />
-          <folding>
-            <marker date="1524475259941" expanded="true" signature="9330:9360" ph="..." />
-            <marker date="1524475259941" expanded="true" signature="9404:9413" ph="..." />
-            <marker date="1524475259941" expanded="true" signature="12963:12982" ph="..." />
-            <marker date="1524475259941" expanded="true" signature="15129:15159" ph="..." />
-            <marker date="1524475259941" expanded="true" signature="15203:15212" ph="..." />
-          </folding>
+        <state relative-caret-position="575">
+          <caret line="392" column="12" lean-forward="true" selection-start-line="392" selection-start-column="12" selection-end-line="392" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/imports/ui/pages/CompareDocuments.js">
+    <entry file="file://$PROJECT_DIR$/imports/modules/charts.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="381" column="59" lean-forward="true" selection-start-line="381" selection-start-column="59" selection-end-line="381" selection-end-column="59" />
+        <state relative-caret-position="257">
+          <caret line="527" column="63" selection-start-line="527" selection-start-column="63" selection-end-line="527" selection-end-column="63" />
+          <folding>
+            <marker date="1524512231286" expanded="true" signature="9330:9360" ph="..." />
+            <marker date="1524512231286" expanded="true" signature="9404:9413" ph="..." />
+            <marker date="1524512231286" expanded="true" signature="12963:12982" ph="..." />
+            <marker date="1524512231286" expanded="true" signature="15130:15160" ph="..." />
+            <marker date="1524512231286" expanded="true" signature="15204:15213" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
