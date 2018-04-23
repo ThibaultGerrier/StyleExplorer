@@ -278,7 +278,7 @@ export default class CompareDocuments extends React.Component {
     const { settings } = this.state;
     settings.groupNGrams = !this.state.settings.groupNGrams;
     localStorage.setItem('groupNGrams', settings.groupNGrams.toString());
-    this.setState({ settings });
+    this.setState({ settings, bigIds: [] });
     this.curColor = -1;
     this.state.charts.forEach((chart) => {
       chart.chart.destroy();
