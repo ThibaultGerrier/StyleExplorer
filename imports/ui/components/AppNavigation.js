@@ -11,7 +11,7 @@ const AppNavigation = props =>
     <Navbar>
       <Navbar.Header>
         <Navbar.Brand>
-          <Link to="/">Writing Styles</Link>
+          <Link to="/">StyleExplorer</Link>
         </Navbar.Brand>
         <Navbar.Toggle/>
       </Navbar.Header>
