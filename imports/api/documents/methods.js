@@ -6,9 +6,12 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import Documents from './documents';
 import rateLimit from '../../modules/rate-limit.js';
 
-const config = require('../../../config/default');
 const { spawn } = require('child_process');
 const fs = require('fs');
+
+const { jarLocation, textLocation } = Meteor.settings.public;
+
+console.log(jarLocation);
 
 export const upsertDocument = new ValidatedMethod({
   name: 'documents.upsert',
@@ -208,10 +211,10 @@ if (Meteor.isServer) {
 
       const hash = Math.abs(hashCode(features));
 
-      const fileLocationName = `${Meteor.absolutePath}/texts/text_${_id}${hash}.txt`;
+      const fileLocationName = `${textLocation}/text_${_id}${hash}.txt`;
       fs.writeFileSync(fileLocationName, cleanText);
 
-      const cmd = spawnProcess('.', `java -jar ${config.jarLocation} ${fileLocationName} ${thirdArg} ${features}`);
+      const cmd = spawnProcess('.', `java -jar ${jarLocation} ${fileLocationName} ${thirdArg} ${features}`);
       console.log('started with ', _id);
       cmd.stdout.on(
         'data',

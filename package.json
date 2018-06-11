@@ -4,7 +4,9 @@
   "version": "1.0.0",
   "description": "Application description.",
   "scripts": {
-    "start": "meteor run"
+    "start": "meteor run",
+    "dev": "meteor --settings ./settings.json",
+    "deploy": "meteor --settings ./.deploy/settings.json"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
