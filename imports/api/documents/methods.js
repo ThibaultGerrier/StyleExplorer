@@ -148,8 +148,8 @@ function javaDone(_id, hash) {
   const howManyNGrams = 100;
 
   Meteor.bindEnvironment(Meteor._sleepForMs(1000));
-  const result = fs.readFileSync(`${Meteor.absolutePath}/texts/textresult_${_id}${hash}.json`, 'utf8');
-  fs.unlinkSync(`${Meteor.absolutePath}/texts/textresult_${_id}${hash}.json`);
+  const result = fs.readFileSync(`${textLocation}/textresult_${_id}${hash}.json`, 'utf8');
+  fs.unlinkSync(`${textLocation}/textresult_${_id}${hash}.json`);
 
   let parsed = JSON.parse(result);
   console.log(memorySizeOf(parsed));

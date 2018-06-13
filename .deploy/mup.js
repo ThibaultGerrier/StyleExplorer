@@ -34,6 +34,18 @@ module.exports = {
     docker: {
       // change to 'abernix/meteord:base' if your app is using Meteor 1.4 - 1.5
       image: 'abernix/meteord:node-8.4.0-base',
+      buildInstructions: [
+        'RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | tee /etc/apt/sources.list.d/webupd8team-java.list',
+        'RUN echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list',
+        'RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886',
+        'RUN apt-get update',
+        'RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections',
+        'RUN apt-get install -y oracle-java8-installer',
+      ]
+    },
+
+    volumes: {
+      '/home/thibault/style_explorer/': '/home/thibault/style_explorer/'
     },
 
     // Show progress bar while uploading bundle to server
