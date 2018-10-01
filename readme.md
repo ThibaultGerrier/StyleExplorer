@@ -8,7 +8,8 @@ This project requires [Meteor](meteor.com) for the server and [Java 1.8](java.co
 ```
 git clone https://github.com/ThibaultGerrier/StyleExplorer.git
 cd StyleExplorer
-meteor
+meteor npm install
+meteor npm run dev
 ```
 Meteor will download all required Meteor and npm packages and will start the server. The tool will now run under localhost:3000.
 
@@ -30,6 +31,6 @@ mvn clean install
 ```
 Should the maven build be successful, it will generate a jar file under TextFeatures\TextFeaturesMaven\target\TextFeaturesMaven-1.0-jar-with-dependencies.jar.
 
-The link to this jar file has to be added to StyleExplorer/config/default.json, by simply rewriting the key to the json property "jarLocation" (Please enter an absolute path).
+The link to this jar file has to be added to StyleExplorer/settings.json, by simply rewriting the key to the json property "jarLocation" (Please enter an absolute path).
 
 For problems please contact me at thibault.gerrier@student.uibk.ac.at.
