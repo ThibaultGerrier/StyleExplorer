@@ -7,7 +7,7 @@
     "start": "meteor run",
     "dev": "meteor --settings ./settings.json",
     "deploy": "meteor --settings ./.deploy/settings.json",
-    "build": "meteor build ../build --architecture os.linux.x86_64"
+    "build": "meteor build ../ --architecture os.linux.x86_64"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
