@@ -11,8 +11,6 @@ const fs = require('fs');
 
 const { jarLocation, textLocation } = Meteor.settings.public;
 
-console.log(jarLocation);
-
 export const upsertDocument = new ValidatedMethod({
   name: 'documents.upsert',
   validate: new SimpleSchema({
